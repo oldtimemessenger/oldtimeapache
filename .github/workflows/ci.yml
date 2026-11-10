@@ -36,10 +36,16 @@ jobs:
       - name: Install locked dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install Chrome for browser regression tests
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+
       - name: Typecheck workspace
         run: pnpm run typecheck
 
       - name: Test frontend
+        env:
+          CHROMIUM_PATH: ${{ steps.chrome.outputs.chrome-path }}
         run: pnpm --filter @workspace/oldtimehive run test
 
       - name: Test API
