@@ -54,7 +54,7 @@ async function liveKitAdmin(config:OpenMicConfig,roomId:string,method:"UpdatePar
     method:"POST",headers:{authorization:`Bearer ${token}`,"content-type":"application/json"},
     body:JSON.stringify(payload),
   });
-  if(!response.ok)throw new ApiError(502,"Open Mic could not update the live audio room. Please retry.");
+  if(!response.ok&&!(response.status===404&&(method==="DeleteRoom"||method==="RemoveParticipant")))throw new ApiError(502,"Open Mic could not update the live audio room. Please retry.");
   return response;
 }
 async function roomRow(db:Database,id:string){
@@ -126,6 +126,8 @@ async function createRoom(request:Request,db:Database,userId:string,config:OpenM
 async function joinRoom(db:Database,id:string,userId:string,config:OpenMicConfig){
   if(!liveKitReady(config))throw new ApiError(503,"Open Mic audio is being prepared. The live audio server is not connected yet.");
   const room=await getRoom(db,id,userId);
+  const banned=await db.prepare("SELECT 1 FROM open_mic_room_bans WHERE room_id=? AND user_id=?").bind(id,userId).first();
+  if(banned)throw new ApiError(403,"The host removed you from this room.");
   const existing=await participant(db,id,userId);
   const count=await db.prepare("SELECT COUNT(*) AS total FROM open_mic_participants WHERE room_id=? AND last_seen_at>?")
     .bind(id,now()-90_000).first<{total:number}>();
@@ -172,7 +174,10 @@ async function moderate(request:Request,db:Database,room:RoomRow,userId:string,c
   if(!existing)throw new ApiError(404,"That participant is no longer in the room.");
   if(action==="remove"){
     await liveKitAdmin(config,room.id,"RemoveParticipant",{room:room.id,identity:target});
-    await db.prepare("DELETE FROM open_mic_participants WHERE room_id=? AND user_id=?").bind(room.id,target).run();
+    await db.batch([
+      db.prepare("INSERT OR IGNORE INTO open_mic_room_bans(room_id,user_id,created_at) VALUES(?,?,?)").bind(room.id,target,now()),
+      db.prepare("DELETE FROM open_mic_participants WHERE room_id=? AND user_id=?").bind(room.id,target),
+    ]);
   }else{
     const muted=action==="mute";
     await liveKitAdmin(config,room.id,"UpdateParticipant",{
