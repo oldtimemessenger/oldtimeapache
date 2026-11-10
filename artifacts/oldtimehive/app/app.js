@@ -86,6 +86,7 @@ import { openCreativeEditor } from "./open-creative-editor.js";
 import { purgeAllCreativeDrafts } from "./creative-drafts.js";
 import { SPORTS_MODE_ENABLED } from "../../../lib/sports/feature-state.js";
 import "./sports-header.css";
+import "./sports-header-entry.css";
 import { creativeMediaMarkup, creativeAttribution } from "./creative-markup.js";
 import { CREATOR_TOOL_ROUTES, renderCreatorScreen, resetCreatorScreenState, blueBadgeMarkup, hydrateBlueBadges } from "./creator-center.js";
 import { ACCOUNT_TOOL_ROUTES,getAccountTools,loadAccountTools,resetAccountTools,renderAccountToolsScreen } from "./account-professional.js";
@@ -143,6 +144,13 @@ import "./profile-onboarding-settings-premium.css";
 
 const $ = (s, r = document) => r.querySelector(s);
 const app = $("#app");
+app?.addEventListener("click", event => {
+  const button = event.target.closest?.("[data-sports-launch]");
+  if (!button) return;
+  event.preventDefault(); event.stopPropagation();
+  if (!SPORTS_MODE_ENABLED) { toast("Sports is being prepared. Workout recording will open once its safety checks are complete."); return; }
+  void navigateFromDrawer("sports");
+}, true);
 installAvatarFallbacks(app);
 installVideoMediaSession();
 // Opens the bounded likes list from the "Liked by" row only; the heart toggle is untouched.
@@ -1688,9 +1696,7 @@ function shell(inner, mode, { hideNav = false } = {}) {
   hideNav = hideNav || (tab === "chat" && Boolean(chatId));
   if (!hideNav && tab === "updates" && !profileId && !viewer) {
     inner = inner.replace(/(<(?:header|div)\b[^>]*\bclass="[^"]*\bhome-primary-row\b[^"]*"[^>]*>)/,
-      opening => opening + `<button type="button" class="app-search-shortcut" data-tab="search" aria-label="Search" data-testid="button-header-search">${ic.search}</button>`);
-    inner = inner.replace(/(<span class="home-header-actions">)/,
-      opening => opening + `<button type="button" class="app-sports-shortcut" data-sports-open aria-label="Sports" title="Sports" aria-disabled="${!SPORTS_MODE_ENABLED}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l3 10H4L7 7Z"/><path d="M9 11v4m-2-2h4m4-1h.01M17 14h.01M8 7l1-3h6l1 3"/></svg><span>Sports</span></button>`);
+      opening => opening + `<button type="button" class="app-search-shortcut" data-tab="search" aria-label="Search" data-testid="button-header-search">${ic.search}</button><button type="button" class="app-sports-shortcut" data-sports-open data-sports-launch aria-label="${SPORTS_MODE_ENABLED ? "Open Sports mode" : "Sports mode coming soon"}" title="${SPORTS_MODE_ENABLED ? "Open Sports mode" : "Sports mode coming soon"}" aria-disabled="${!SPORTS_MODE_ENABLED}" data-testid="button-header-sports"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l3 10a2 2 0 0 1-3.2 2L12 15l-4.8 4A2 2 0 0 1 4 17L7 7Z"/><path d="M9 10v4m-2-2h4m5-1h.01M18 13h.01"/></svg><span>Sports</span></button>`);
   }
   if (!hideNav && tab === "communities") {
     const owner = api.me();

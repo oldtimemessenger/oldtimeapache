@@ -708,3 +708,31 @@
   line-height:1.25;
 }
 #app .profile-screen .profile-simple-hero.profile-no-cover .profile-cover { display:none !important; }
+
+/* Very narrow phones: keep the centered identity row shrinkable at 320px. */
+@media (max-width:360px) {
+  #app .phone .profile-screen .profile-simple-hero .profile-name-row {
+    display:flex;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    box-sizing:border-box;
+  }
+  #app .phone .profile-screen .profile-simple-hero .profile-details-copy {
+    flex:1 1 0%;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    box-sizing:border-box;
+  }
+  #app .phone .profile-screen .profile-simple-hero :is(.profile-name,.profile-handle,.profile-category) {
+    display:block;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    box-sizing:border-box;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+}
