@@ -1688,7 +1688,7 @@ function shell(inner, mode, { hideNav = false } = {}) {
   hideNav = hideNav || (tab === "chat" && Boolean(chatId));
   if (!hideNav && tab === "updates" && !profileId && !viewer) {
     inner = inner.replace(/(<(?:header|div)\b[^>]*\bclass="[^"]*\bhome-primary-row\b[^"]*"[^>]*>)/,
-      opening => opening + `<button type="button" class="app-search-shortcut" data-tab="search" aria-label="Search" data-testid="button-header-search">${ic.search}</button>${SPORTS_MODE_ENABLED ? `<button type="button" class="app-sports-shortcut" data-sports-launch aria-label="Open Sports mode" data-testid="button-header-sports"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l3 10a2 2 0 0 1-3.2 2L12 15l-4.8 4A2 2 0 0 1 4 17L7 7Z"/><path d="M9 10v4m-2-2h4m5-1h.01M18 13h.01"/></svg><span>Sports</span></button>` : ""}`);
+      opening => opening + `<button type="button" class="app-search-shortcut" data-tab="search" aria-label="Search" data-testid="button-header-search">${ic.search}</button><button type="button" class="app-sports-shortcut${SPORTS_MODE_ENABLED ? "" : " is-preview"}" data-sports-launch aria-label="${SPORTS_MODE_ENABLED ? "Open Sports mode" : "Sports mode coming soon"}" data-testid="button-header-sports"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l3 10a2 2 0 0 1-3.2 2L12 15l-4.8 4A2 2 0 0 1 4 17L7 7Z"/><path d="M9 10v4m-2-2h4m5-1h.01M18 13h.01"/></svg><span>Sports</span></button>`);
   }
   if (!hideNav && tab === "communities") {
     const owner = api.me();
