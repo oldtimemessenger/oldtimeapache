@@ -152,3 +152,159 @@
 @media (prefers-reduced-motion:reduce) {
   #app .phone * { scroll-behavior:auto!important; }
 }
+
+
+/* Screen-by-screen pass: shared visual rules, with each surface keeping its own purpose. */
+/* App shell and bottom dock */
+#app .phone { background:var(--bg,#fff); }
+#app .phone > .nav:not(.nav-hidden) {
+  min-height:calc(62px + env(safe-area-inset-bottom,0px));
+  padding:7px 8px calc(7px + env(safe-area-inset-bottom,0px));
+  border-top:1px solid var(--editorial-hairline);
+  background:var(--color-surface,#fff);
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+#app .phone > .nav:not(.nav-hidden) > button { min-height:46px; gap:3px; }
+#app .phone > .nav:not(.nav-hidden) > button .navic { width:21px;height:21px; }
+#app .phone > .nav:not(.nav-hidden) > button.on {
+  color:var(--color-primary,#1456d9);
+  background:transparent;
+}
+#app .phone > .nav:not(.nav-hidden) > button.on::after {
+  content:"";position:absolute;top:0;left:50%;width:18px;height:2px;
+  border-radius:2px;background:currentColor;transform:translateX(-50%);
+}
+/* Home: preserve the immersive media canvas and make the controls quiet. */
+#app .phone :is(.home-discovery-header,.home-primary-row,.home-view-tabs,.home-topic-tabs) {
+  text-shadow:0 1px 3px rgba(0,0,0,.45);
+}
+#app .phone .home-view-tab { font-size:14px;font-weight:650; }
+#app .phone .home-view-tab.on { font-weight:760; }
+#app .phone .home-topic-tabs { gap:16px;padding-inline:12px; }
+#app .phone .home-topic-tab { font-size:12px; }
+#app .phone .home-header-actions { gap:3px; }
+#app .phone .home-header-actions .icon {
+  width:34px;min-width:34px;height:34px;min-height:34px;
+  border:0;border-radius:9px;background:transparent;
+}
+/* Community: clean publication-like stream, not a stack of floating cards. */
+#app .phone .community-screen { padding-inline:0; }
+#app .phone .community-header {
+  min-height:calc(54px + env(safe-area-inset-top,0px));
+  height:auto;gap:10px;
+  border-bottom:1px solid var(--editorial-hairline);
+  background:var(--color-surface,#fff);
+}
+#app .phone .community-header h1 { font-size:20px;letter-spacing:-.04em; }
+#app .phone .community-feed-tabs {
+  height:42px;min-height:42px;
+  border-bottom:1px solid var(--editorial-hairline);
+  background:var(--color-surface,#fff);
+}
+#app .phone .community-feed-tabs button { min-height:42px;font-size:13px; }
+#app .phone .community-feed-tabs button.on::after { width:24px;height:2px; }
+#app .phone .community-post-card {
+  padding:13px var(--editorial-gutter) 10px;
+  border-bottom:1px solid var(--editorial-hairline);
+  background:var(--color-surface,#fff);
+}
+#app .phone .community-post-avatar { width:38px;height:38px;flex-basis:38px; }
+#app .phone .community-post-media { border-radius:10px; }
+#app .phone .community-post-actions { margin-top:8px; }
+/* Search and Explore: preserve existing Places/video layouts, tighten the hierarchy. */
+#app .phone .search-screen { padding-inline:0; }
+#app .phone .search-screen .page { padding-inline:0; }
+#app .phone .discovery-header {
+  min-height:48px;padding-inline:var(--editorial-gutter);
+}
+#app .phone .discovery-header h1 { font-size:19px;letter-spacing:-.04em; }
+#app .phone .discovery-tabs { padding-inline:var(--editorial-gutter); }
+#app .phone .discovery-tabs button { min-height:42px;font-size:13px; }
+#app .phone .discovery-search-wrap {
+  min-height:42px;margin:10px var(--editorial-gutter) 4px;
+  border:0;border-radius:10px;background:var(--color-surface-secondary,#f2f4f7);
+}
+#app .phone .discovery-video-rail { padding-block:9px 6px; }
+#app .phone .discovery-video-track { gap:7px;padding-inline:var(--editorial-gutter); }
+#app .phone .discovery-video-card { border-radius:8px; }
+#app .phone .xe-bar { margin-inline:var(--editorial-gutter); }
+#app .phone .xe-search { min-height:42px;border:0;border-radius:10px;background:var(--color-surface-secondary,#f2f4f7); }
+#app .phone .xe-chips { padding-inline:var(--editorial-gutter); }
+#app .phone .xe-chips .xe-chip { border-radius:8px; }
+/* Profiles: retain cover, avatar and social counts; remove oversized nested panels. */
+#app .phone .profile-screen .profile-page { background:var(--color-surface,#fff); }
+#app .phone .profile-screen .profile-intro { padding-inline:var(--editorial-gutter); }
+#app .phone .profile-screen .profile-stats > .profile-count-card {
+  min-height:52px;padding:4px 3px;border:0;border-radius:0;
+  background:transparent;box-shadow:none;
+}
+#app .phone .profile-screen .profile-primary-actions { gap:7px; }
+#app .phone .profile-screen .profile-primary-actions > button {
+  min-height:42px;border-radius:9px;
+}
+#app .phone .profile-screen .profile-body { padding-inline:var(--editorial-gutter); }
+#app .phone .profile-screen .profile-section-tabs {
+  position:sticky;top:0;z-index:4;min-height:42px;
+  background:var(--color-surface,#fff);border-bottom:1px solid var(--editorial-hairline);
+}
+#app .phone .profile-screen .profile-section-tab { min-height:42px;border-radius:0; }
+#app .phone .profile-screen .profile-post-grid { gap:3px; }
+#app .phone .profile-screen .profile-post-media { border-radius:4px; }
+/* Inbox and conversation: denser rows, clearer identity, consistent action rhythm. */
+#app .phone .chat-list-screen .chat-inbox-row {
+  min-height:66px;padding:9px var(--editorial-gutter);
+  border-bottom:1px solid var(--editorial-hairline);
+}
+#app .phone .chat-list-screen .chat-inbox-avatar { width:46px;height:46px;flex-basis:46px; }
+#app .phone .chat-inbox-filter { border:0;background:transparent; }
+#app .phone .chat-inbox-filter.on {
+  color:var(--color-primary,#1456d9);
+  background:color-mix(in srgb,var(--color-primary,#1456d9) 9%,transparent);
+}
+#app .phone .chat-header { min-height:52px;border-bottom:1px solid var(--editorial-hairline); }
+#app .phone .conversation-screen textarea { border-radius:10px; }
+/* Notifications and settings: one aligned list, restrained grouping and no nested card stacks. */
+#app .phone :is(.notifications-screen,.settings-screen) { padding-inline:0; }
+#app .phone .notification-row {
+  min-height:66px;padding-inline:var(--editorial-gutter);
+  border-bottom:1px solid var(--editorial-hairline);
+}
+#app .phone .notification-filter { border:0;background:transparent; }
+#app .phone .notification-filter.on {
+  color:var(--color-primary,#1456d9);
+  background:color-mix(in srgb,var(--color-primary,#1456d9) 9%,transparent);
+}
+#app .phone .settings-content { padding-inline:var(--editorial-gutter); }
+#app .phone .settings-group {
+  margin:16px 0 0;padding:0;
+  border:0;border-bottom:1px solid var(--editorial-hairline);
+  border-radius:0;background:transparent;
+}
+#app .phone .settings-group h3 {
+  padding:8px 0;color:var(--color-muted,#6b6f76);
+  font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+}
+#app .phone .settings-entry {
+  min-height:48px;padding:9px 0;border:0;border-top:1px solid var(--editorial-hairline);
+  border-radius:0;background:transparent;
+}
+/* Creation surfaces keep their tools and controls; simplify only the surrounding frame. */
+#app .phone :is(.creative-studio-workspace,.creative-editor,.camera-screen) {
+  border-radius:0;box-shadow:none;
+}
+#app .phone :is(.creative-studio-workspace,.creative-editor) :is(.panel,.tool-panel) {
+  border-radius:12px;box-shadow:none;
+}
+#app .phone :is(.sheet,.panel) { max-width:min(100%,720px); }
+@media (max-width:380px) {
+  #app .phone .community-post-card { padding-inline:12px; }
+  #app .phone .profile-screen .profile-intro { padding-inline:12px; }
+  #app .phone .discovery-tabs button { font-size:12px; }
+}
+@media (min-width:700px) {
+  #app .phone .community-screen,
+  #app .phone .search-screen,
+  #app .phone .settings-screen { max-width:920px;margin-inline:auto; }
+  #app .phone .community-post-card { padding-inline:20px; }
+}
