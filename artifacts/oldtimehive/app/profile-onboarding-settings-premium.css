@@ -1,0 +1,188 @@
+/* Profile editing, account tools and authentication — shared obsidian presentation.
+   Scoped overrides only: preserve form semantics, media assets, and all account flows. */
+.edit-profile-screen {
+  --pe-bg:#090a0e;
+  --pe-card:#11131a;
+  --pe-line:rgba(255,255,255,.11);
+  --pe-text:#f5f6fa;
+  --pe-muted:#a0a6b2;
+  background:var(--pe-bg)!important;
+  color:var(--pe-text);
+  color-scheme:dark;
+}
+.edit-profile-screen .profile-editor-header,
+.edit-profile-screen .edit-profile-scroll { background:var(--pe-bg)!important; }
+.edit-profile-screen .profile-editor-back,
+.edit-profile-screen .profile-editor-avatar-section,
+.edit-profile-screen .profile-editor-fields,
+.edit-profile-screen .profile-editor-cover-section,
+.edit-profile-screen .profile-editor-interests {
+  background:var(--pe-card)!important;
+  border:1px solid var(--pe-line);
+  color:var(--pe-text);
+}
+.edit-profile-screen .profile-editor-avatar-section,
+.edit-profile-screen .profile-editor-cover-section,
+.edit-profile-screen .profile-editor-interests { border-radius:16px; }
+.edit-profile-screen .profile-editor-identity b,
+.edit-profile-screen .profile-editor-section-heading b { color:var(--pe-text); }
+.edit-profile-screen .profile-editor-identity small,
+.edit-profile-screen .profile-editor-section-heading small,
+.edit-profile-screen .profile-editor-field>span,
+.edit-profile-screen .profile-editor-bio>label { color:var(--pe-muted)!important; }
+.edit-profile-screen .profile-editor-fields { overflow:hidden; }
+.edit-profile-screen .profile-editor-field,
+.edit-profile-screen .profile-editor-bio { border-color:var(--pe-line)!important; }
+.edit-profile-screen .profile-editor-field>input,
+.edit-profile-screen .profile-editor-bio textarea {
+  background:transparent!important;
+  color:var(--pe-text)!important;
+  caret-color:var(--pe-text);
+}
+.edit-profile-screen .profile-editor-field:focus-within,
+.edit-profile-screen .profile-editor-bio:focus-within { background:#191d27!important; }
+.edit-profile-screen .profile-editor-back,
+.edit-profile-screen .profile-avatar-choice,
+.edit-profile-screen .profile-editor-cover-upload,
+.edit-profile-screen .profile-editor-auto-cover,
+.edit-profile-screen .profile-editor-interests .profile-interest-option,
+.edit-profile-screen .interest-custom-entry input {
+  background:#171a22!important;
+  border-color:var(--pe-line)!important;
+  color:var(--pe-text)!important;
+}
+.edit-profile-screen .profile-avatar-choice[aria-pressed=true],
+.edit-profile-screen .profile-editor-auto-cover[aria-pressed=true],
+.edit-profile-screen .profile-editor-interests .profile-interest-option.selected {
+  background:#f5f6fa!important;
+  border-color:#f5f6fa!important;
+  color:#08090c!important;
+}
+.edit-profile-screen .profile-avatar-choices>summary {
+  background:#20242e!important;
+  color:var(--pe-text)!important;
+}
+.edit-profile-screen .profile-editor-photo-action,
+.edit-profile-screen .profile-editor-header-save,
+.edit-profile-screen .profile-editor-save {
+  background:#f5f6fa!important;
+  border-color:#f5f6fa!important;
+  color:#08090c!important;
+}
+.edit-profile-screen .profile-editor-footer {
+  background:rgba(9,10,14,.96)!important;
+  border-color:var(--pe-line)!important;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+}
+.edit-profile-screen .profile-editor-save-cover {
+  background:#171a22!important;
+  border-color:var(--pe-line)!important;
+  color:var(--pe-text)!important;
+}
+.edit-profile-screen :is(input,textarea,button,summary):focus-visible {
+  outline:2px solid rgba(245,246,250,.9);
+  outline-offset:2px;
+}
+
+/* Account / creator tools: cards, controls, tabs and metric surfaces. */
+.ap-wrap {
+  --ap-bg:#090a0e;
+  --ap-card:#11131a;
+  --ap-raised:#171a22;
+  --ap-line:rgba(255,255,255,.11);
+  --ap-ink:#f5f6fa;
+  --ap-muted:#a0a6b2;
+  background:var(--ap-bg)!important;
+  color:var(--ap-ink);
+  color-scheme:dark;
+}
+.ap-wrap :is(h1,h2,h3,h4,b,strong,.ap-big) { color:var(--ap-ink); }
+.ap-wrap :is(p,small,.ap-note,.ap-eyebrow,.ap-stat span,.ap-item small,.ap-line small) { color:var(--ap-muted); }
+.ap-wrap :is(.ap-card,.ap-overview-metric,.ap-guide,.ap-stat,.ap-item) {
+  background:var(--ap-card)!important;
+  border-color:var(--ap-line)!important;
+  color:var(--ap-ink);
+}
+.ap-wrap :is(.ap-icon,.ap-field,.ap-seg button,.ap-new,.ap-tools-art) {
+  background:var(--ap-raised)!important;
+  border-color:var(--ap-line)!important;
+  color:var(--ap-ink)!important;
+}
+.ap-wrap .ap-tabs { border-color:var(--ap-line)!important; }
+.ap-wrap .ap-tabs button { color:var(--ap-muted)!important; }
+.ap-wrap .ap-tabs button.on { color:var(--ap-ink)!important; border-bottom-color:var(--ap-ink)!important; }
+.ap-wrap .ap-seg button.on { background:#f5f6fa!important; color:#08090c!important; }
+.ap-wrap .ap-btn { background:#f5f6fa!important; border-color:#f5f6fa!important; color:#08090c!important; }
+.ap-wrap .ap-btn.ghost { background:var(--ap-raised)!important; border-color:var(--ap-line)!important; color:var(--ap-ink)!important; }
+.ap-wrap .ap-text-link { color:#dce5ff!important; }
+.ap-wrap .ap-line { border-color:var(--ap-line)!important; color:var(--ap-ink)!important; }
+.ap-wrap .ap-guide summary i { color:var(--ap-muted); }
+.ap-wrap .ap-skel { background:linear-gradient(90deg,#11131a,#20242e,#11131a)!important; }
+
+/* Login, signup and recovery share the same dark shell without changing their flow. */
+.auth.ot-auth {
+  --ot-ink:#f5f6fa;
+  --ot-muted:#a0a6b2;
+  --ot-field-ink:#f5f6fa;
+  --ot-line:rgba(255,255,255,.13);
+  --ot-red:#ff9b9b;
+  background:#090a0e!important;
+  color:#f5f6fa!important;
+  color-scheme:dark;
+}
+.ot-auth .ot-eyebrow,
+.ot-auth .ot-lede,
+.ot-auth .ot-switch,
+.ot-auth .signup-interest-count { color:#a0a6b2!important; }
+.ot-auth h1,
+.ot-auth .ot-label,
+.ot-auth .ot-switch strong,
+.ot-auth .signup-policy-copy,
+.ot-auth .signup-follow-oldtime b { color:#f5f6fa!important; }
+#app .auth.ot-auth .field {
+  background:#171a22!important;
+  border-color:rgba(255,255,255,.13)!important;
+  color:#f5f6fa!important;
+}
+#app .auth.ot-auth .field::placeholder { color:#9299a7!important; }
+#app .auth.ot-auth .field:focus {
+  background:#171a22!important;
+  border-color:#f5f6fa!important;
+  box-shadow:0 0 0 3px rgba(245,246,250,.1)!important;
+}
+#app .auth.ot-auth .field:-webkit-autofill,
+#app .auth.ot-auth .field:-webkit-autofill:hover,
+#app .auth.ot-auth .field:-webkit-autofill:focus,
+#app .auth.ot-auth .field:autofill {
+  -webkit-box-shadow:0 0 0 1000px #171a22 inset!important;
+  box-shadow:0 0 0 1000px #171a22 inset!important;
+  -webkit-text-fill-color:#f5f6fa!important;
+  caret-color:#f5f6fa;
+}
+.ot-auth .btn.primary { background:#f5f6fa!important; border-color:#f5f6fa!important; color:#08090c!important; }
+.ot-auth .btn.ghost,
+.ot-auth .signup-interest,
+.ot-auth .signup-follow-oldtime {
+  background:#171a22!important;
+  border-color:rgba(255,255,255,.13)!important;
+  color:#f5f6fa!important;
+}
+.ot-auth .signup-interest.selected {
+  background:#f5f6fa!important;
+  border-color:#f5f6fa!important;
+  color:#08090c!important;
+}
+.ot-auth .signup-policy-copy a,
+.ot-auth .auth-step-back,
+.ot-auth .auth-recovery-link,
+.ot-auth .btn.auth-link { color:#dce5ff!important; }
+.ot-auth .signup-follow-oldtime small { color:#a0a6b2!important; }
+.ot-auth .signup-follow-oldtime input { accent-color:#f5f6fa; }
+.ot-auth .auth-success { color:#a9d9b5!important; }
+
+@media (prefers-reduced-motion:reduce) {
+  .edit-profile-screen *,
+  .ap-wrap *,
+  .ot-auth * { scroll-behavior:auto!important; transition:none!important; animation:none!important; }
+}
