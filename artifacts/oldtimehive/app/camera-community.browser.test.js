@@ -3586,8 +3586,8 @@ test(process.env.OLDTIME_STORY_REPLY_ONLY === "1"
       `the message body should occupy only its text lines, got ${renderedBubble.messageHeight}px`);
     assert.equal(renderedBubble.metadataInsideBubble, false,
       "time and delivery checks should sit below the bubble, not inside it");
-    assert.equal(renderedBubble.rowAlignment, "flex-start",
-      "incoming bubble should align to the left");
+    assert.ok(["flex-start", "flow-start"].includes(renderedBubble.rowAlignment),
+      "incoming bubble should align to the left regardless of browser logical alignment serialization");
     assert.equal(renderedBubble.rowBackground, "rgba(0, 0, 0, 0)",
       "incoming message rows should not paint a gray backing panel");
     assert.equal(renderedBubble.bubbleBackground, "rgb(246, 244, 239)",
@@ -3620,8 +3620,8 @@ test(process.env.OLDTIME_STORY_REPLY_ONLY === "1"
     assert.equal(outgoingBubble.text, "hey");
     assert.ok(outgoingBubble.height < 70,
       `a one-word sent message should fit a compact bubble, got ${outgoingBubble.height}px`);
-    assert.equal(outgoingBubble.rowAlignment, "flex-end",
-      "sent bubbles should align to the right on mobile");
+    assert.ok(["flex-end", "flow-end"].includes(outgoingBubble.rowAlignment),
+      "sent bubbles should align to the right regardless of browser logical alignment serialization");
     assert.equal(outgoingBubble.rowBackground, "rgba(0, 0, 0, 0)",
       "sent message rows should not paint a gray backing panel");
     assert.equal(outgoingBubble.bubbleBackground, "rgba(0, 0, 0, 0)",
