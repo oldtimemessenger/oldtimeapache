@@ -1,0 +1,130 @@
+/* Publishing and sharing — premium obsidian pass.
+   Presentation-only: keep composer state, recipients, delivery, and media behavior intact. */
+:root {
+  --ot-pub-bg:#090a0e;
+  --ot-pub-panel:#11131a;
+  --ot-pub-raised:#191d26;
+  --ot-pub-line:rgba(255,255,255,.11);
+  --ot-pub-ink:#f5f6fa;
+  --ot-pub-muted:#a0a6b2;
+}
+
+/* Community thread composer and viewer. */
+.community-thread-part {
+  border-left-color:#667b9e!important;
+  background:#11131a!important;
+  color:var(--ot-pub-ink)!important;
+  border-radius:0 14px 14px 0;
+}
+.community-thread-part header { color:#d8dfeb!important; }
+.community-thread-part header button { color:var(--ot-pub-muted)!important; }
+.community-thread-part textarea { color:var(--ot-pub-ink)!important; caret-color:var(--ot-pub-ink); }
+.community-thread-part textarea::placeholder { color:#818b9a!important; }
+.community-thread-part textarea:focus-visible {
+  outline:2px solid rgba(220,229,255,.9)!important;
+  outline-offset:3px;
+}
+.community-thread-part small { color:var(--ot-pub-muted)!important; }
+.community-thread-compose-tools { border-bottom-color:var(--ot-pub-line)!important; }
+.community-thread-compose-tools button,
+.community-thread-affordance {
+  border-color:var(--ot-pub-line)!important;
+  background:var(--ot-pub-raised)!important;
+  color:#dce5ff!important;
+}
+.community-thread-compose-tools span { color:var(--ot-pub-muted)!important; }
+.community-thread-viewer {
+  background:var(--ot-pub-bg)!important;
+  color:var(--ot-pub-ink)!important;
+  border:1px solid var(--ot-pub-line);
+  box-shadow:0 24px 80px rgba(0,0,0,.45);
+}
+.community-thread-viewer>header { border-bottom-color:var(--ot-pub-line)!important; }
+.community-thread-viewer>header button,
+.community-original-post-panel>header button {
+  background:var(--ot-pub-raised)!important;
+  color:var(--ot-pub-ink)!important;
+}
+.community-thread-viewer>header small,
+.community-thread-part-number { color:var(--ot-pub-muted)!important; }
+.community-thread-viewer-part { border-left-color:#667b9e!important; }
+.community-thread-viewer-part .community-post-card,
+.community-original-post-card {
+  background:var(--ot-pub-panel)!important;
+  border-color:var(--ot-pub-line)!important;
+  color:var(--ot-pub-ink)!important;
+}
+.community-thread-loading i,
+.community-thread-loading span { background:#252a35!important; }
+.community-thread-viewer-error { color:#ff9b9b!important; }
+
+/* Original-post preview / publish context. */
+.community-original-post-panel {
+  background:var(--ot-pub-bg)!important;
+  color:var(--ot-pub-ink)!important;
+}
+.community-original-post-panel>header { color:var(--ot-pub-ink)!important; }
+.community-original-post-author small,
+.community-original-post-metrics { color:var(--ot-pub-muted)!important; }
+.community-original-post-card>p { color:var(--ot-pub-ink)!important; }
+.community-original-post-metrics { border-top-color:var(--ot-pub-line)!important; }
+
+/* Recipient picker: align community shares with the same sharing surface as other posts. */
+.share-recipient-panel.srp-community-share {
+  background:var(--ot-pub-bg)!important;
+  color:var(--ot-pub-ink)!important;
+  border:1px solid var(--ot-pub-line);
+}
+.share-recipient-panel.srp-community-share .srp-grab { background:#555e6d!important; }
+.share-recipient-panel.srp-community-share .srp-search,
+.share-recipient-panel.srp-community-share .srp-close,
+.share-recipient-panel.srp-community-share .srp-aud button,
+.share-recipient-panel.srp-community-share .srp-preview {
+  background:var(--ot-pub-raised)!important;
+  color:var(--ot-pub-ink)!important;
+}
+.share-recipient-panel.srp-community-share .srp-search input,
+.share-recipient-panel.srp-community-share .srp-compose textarea {
+  background:transparent!important;
+  color:var(--ot-pub-ink)!important;
+}
+.share-recipient-panel.srp-community-share .srp-aud button[aria-pressed="true"] {
+  background:#f5f6fa!important;
+  color:#08090c!important;
+}
+.share-recipient-panel.srp-community-share .srp-compose {
+  border-top:1px solid var(--ot-pub-line)!important;
+  background:var(--ot-pub-bg)!important;
+}
+.share-recipient-panel.srp-community-share .srp-compose-field {
+  background:var(--ot-pub-raised)!important;
+  border-color:var(--ot-pub-line)!important;
+}
+.share-recipient-panel.srp-community-share .srp-compose textarea::placeholder,
+.share-recipient-panel.srp-community-share .srp-preview small,
+.share-recipient-panel.srp-community-share .srp-quote span,
+.share-recipient-panel.srp-community-share .srp-actlbl,
+.share-recipient-panel.srp-community-share .srp-hint {
+  color:var(--ot-pub-muted)!important;
+}
+.share-recipient-panel.srp-community-share .srp-friend input:checked ~ .srp-face .srp-avatar {
+  box-shadow:0 0 0 3px var(--ot-pub-bg),0 0 0 5px #8fb7ff!important;
+}
+.share-recipient-panel.srp-community-share .srp-badge { background:#f5f6fa!important;color:#08090c!important;border-color:var(--ot-pub-bg)!important; }
+.share-recipient-panel.srp-community-share .srp-send {
+  background:#f5f6fa!important;
+  color:#08090c!important;
+}
+.share-recipient-panel.srp-community-share .srp-send:disabled {
+  background:#2a303a!important;
+  color:#aab1bd!important;
+}
+.share-recipient-panel.srp-community-share :is(button,input,textarea):focus-visible {
+  outline:2px solid rgba(245,246,250,.9)!important;
+  outline-offset:3px;
+}
+@media (prefers-reduced-motion:reduce) {
+  .community-thread-part *,
+  .community-thread-viewer *,
+  .share-recipient-panel.srp-community-share * { transition:none!important; }
+}
