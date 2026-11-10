@@ -133,6 +133,7 @@ import "./destination-landing-refinement.css";
 import "./profile-header-refinement.css";
 /* Last-loaded, color-only correction layer for verified light-surface text. */
 import "./foreground-consistency.css";
+import "./editorial-compact-redesign.css";
 
 const $ = (s, r = document) => r.querySelector(s);
 const app = $("#app");
