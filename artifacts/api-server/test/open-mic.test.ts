@@ -11,10 +11,10 @@ test("Open Mic keeps peer-to-peer rooms deliberately small", () => {
 
 test("Open Mic schema constrains visibility, room state, roles, and ownership", async () => {
   const migration = await readFile(new URL("../migrations/0040_open_mic_rooms.sql", import.meta.url), "utf8");
-  assert.match(migration, /visibility IN \\('public','unlisted'\\)/);
-  assert.match(migration, /status IN \\('live','ended'\\)/);
-  assert.match(migration, /role IN \\('host','listener'\\)/);
-  assert.match(migration, /REFERENCES users\\(id\\) ON DELETE CASCADE/);
-  assert.match(migration, /REFERENCES open_mic_rooms\\(id\\) ON DELETE CASCADE/);
-  assert.match(migration, /PRIMARY KEY \\(room_id, user_id\\)/);
+  assert.ok(migration.includes("visibility IN ('public','unlisted')"));
+  assert.ok(migration.includes("status IN ('live','ended')"));
+  assert.ok(migration.includes("role IN ('host','listener')"));
+  assert.ok(migration.includes("REFERENCES users(id) ON DELETE CASCADE"));
+  assert.ok(migration.includes("REFERENCES open_mic_rooms(id) ON DELETE CASCADE"));
+  assert.ok(migration.includes("PRIMARY KEY (room_id, user_id)"));
 });
