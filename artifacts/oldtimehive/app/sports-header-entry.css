@@ -1,0 +1,17 @@
+/* Home header Sports entry — only rendered while the Sports client/API feature gate is enabled. */
+#app .phone .app-sports-shortcut{
+  position:absolute;right:0;top:0;bottom:0;margin-block:auto;
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-height:38px;padding:0 12px;border:1px solid rgba(35,83,52,.18);
+  border-radius:999px;background:linear-gradient(135deg,#d8f5bd,#a8dfbd);
+  color:#102319;font-size:12px;font-weight:800;letter-spacing:.015em;
+  box-shadow:0 5px 16px rgba(30,91,55,.12);cursor:pointer;
+}
+#app .phone .app-sports-shortcut svg{width:17px;height:17px;display:block;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#app .phone .home-primary-row:has(.app-sports-shortcut){padding-right:112px}
+#app .phone .home-primary-row:has(.app-sports-shortcut)>.app-search-shortcut{right:76px;left:auto}
+@media(max-width:360px){
+ #app .phone .app-sports-shortcut{padding-inline:9px;font-size:11px}
+ #app .phone .home-primary-row:has(.app-sports-shortcut){padding-right:104px}
+ #app .phone .home-primary-row:has(.app-sports-shortcut)>.app-search-shortcut{right:68px}
+}
