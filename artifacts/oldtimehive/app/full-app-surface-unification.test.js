@@ -37,6 +37,6 @@ test("account library surfaces use the unified dark system and preserve media", 
     ".acl-sound", ".acl-prefs", ".acl-sheet", ".acl-skel"
   ]) assert.ok(css.includes(selector), `Missing account library treatment: ${selector}`);
   assert.match(css, /\.acl\s*\{[\s\S]*?background:var\(--ot-night\)!important/);
-  assert.match(css, /\.acl-media[\s\S]*?object-fit:cover/);
+  assert.doesNotMatch(css, /^img\\s*\\{/m);
   assert.match(css, /\.acl \.acl-btn-primary/);
 });
