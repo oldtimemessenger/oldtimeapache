@@ -12,8 +12,8 @@ describe("Open Mic peer signaling validation",()=>{
   });
   it("accepts only host mute, allow-mic and removal control messages",()=>{
     for(const action of ["mute","allow-mic","remove"])assert.equal(
-      parseOpenMicSignalMessage(envelope({roomId,to:recipient,kind:"moderation",payload:{action}}))?.kind,"moderation");
-    assert.equal(parseOpenMicSignalMessage(envelope({roomId,to:recipient,kind:"moderation",payload:{action:"promote"}})),null);
+      parseOpenMicSignalMessage(envelope({roomId,to:recipient,kind:"moderation",payload:{action,targetUserId:recipient}}))?.kind,"moderation");
+    assert.equal(parseOpenMicSignalMessage(envelope({roomId,to:recipient,kind:"moderation",payload:{action:"promote",targetUserId:recipient}})),null);
   });
   it("rejects invalid room or recipient ids, malformed descriptions and oversized candidates",()=>{
     assert.equal(parseOpenMicSignalMessage(envelope({roomId:"bad",to:recipient,kind:"offer",payload:{description:{type:"offer",sdp:"v=0"}}})),null);
