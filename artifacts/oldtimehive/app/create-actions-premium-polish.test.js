@@ -33,3 +33,11 @@ test("contextual action menus share dark surfaces and retain destructive-action 
 test("presentation polish does not target the editor canvas or capture media", () => {
   assert.doesNotMatch(css, /#ce-canvas|\.cs-stage\s*\{|\.sc-live\s*\{/);
 });
+
+test("status capture receives unified chrome without styling live camera pixels", () => {
+  for (const selector of [".sc-root", ".sc-icon", ".sc-pill", ".sc-chip", ".sc-aud", ".sc-send"]) {
+    assert.ok(css.includes(selector), `Missing status-capture treatment: ${selector}`);
+  }
+  assert.match(css, /\.sc-root \.sc-icon\[aria-pressed="true"\]/);
+  assert.doesNotMatch(css, /\.sc-live\s*\{|\.sc-canvas\s*\{/);
+});
