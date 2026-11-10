@@ -25,7 +25,7 @@ test("Home gets a Search header shortcut and Profile replaces Search in bottom n
 test("Home Search and Community Profile stay scoped; Messages gets no Profile header control",()=>{
   const start=app.indexOf("function shell(");
   const prefix=app.slice(start,app.indexOf('  if (document.querySelector(".emoji-overlay"))',start));
-  const decorate=tab=>Function("api","tab","profileId","viewer","chatId","ic","profileMediaSource","profileNavigationAvatarMarkup",
+  const decorate=tab=>Function("api","tab","profileId","viewer","chatId","ic","profileMediaSource","profileNavigationAvatarMarkup","SPORTS_MODE_ENABLED",
     `${prefix}return inner;}return shell;`)({me:()=>({avatar:""})},tab,null,null,null,{user:"<svg></svg>"},()=>"",()=>"avatar");
   const search=app.match(/<header class="community-header search-app-header">[\s\S]*?<\/header>/)[0];
   const messages='<div class="chat-list-topline"><h1>Messages</h1><div class="chat-head-actions">Existing controls</div></div>';
