@@ -145,8 +145,9 @@ const $ = (s, r = document) => r.querySelector(s);
 const app = $("#app");
 app?.addEventListener("click", event => {
   const button = event.target.closest?.("[data-sports-launch]");
-  if (!button || !SPORTS_MODE_ENABLED) return;
+  if (!button) return;
   event.preventDefault(); event.stopPropagation();
+  if (!SPORTS_MODE_ENABLED) { toast("Sports is being prepared. Workout recording will open once its safety checks are complete."); return; }
   void navigateFromDrawer("sports");
 }, true);
 installAvatarFallbacks(app);
