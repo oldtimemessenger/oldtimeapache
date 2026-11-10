@@ -1,0 +1,148 @@
+/* Profile, identity and account settings — premium obsidian surface pass.
+   Presentation-only: preserve all form semantics, auth flow, uploads and account actions. */
+.edit-profile-screen {
+  --pe-bg:#090a0e;
+  --pe-card:#11131a;
+  --pe-line:rgba(255,255,255,.11);
+  --pe-text:#f5f6fa;
+  --pe-muted:#a0a6b2;
+  background:var(--pe-bg)!important;
+  color:var(--pe-text)!important;
+  color-scheme:dark;
+}
+.edit-profile-screen .profile-editor-header,
+.edit-profile-screen .edit-profile-scroll { background:var(--pe-bg)!important; color:var(--pe-text); }
+.edit-profile-screen .profile-editor-header { border-bottom:1px solid var(--pe-line); }
+.edit-profile-screen :is(.profile-editor-back,.profile-editor-avatar-section,.profile-editor-fields,
+  .profile-editor-cover-section,.profile-editor-interests,.profile-editor-avatar-choice,
+  .profile-avatar-choice,.profile-avatar-choice-panel) {
+  background:var(--pe-card)!important;
+  border-color:var(--pe-line)!important;
+  color:var(--pe-text)!important;
+}
+.edit-profile-screen :is(.profile-editor-identity b,.profile-editor-section-heading b,
+  .profile-editor-field > span,.profile-editor-bio > label,.profile-editor-header h1) { color:var(--pe-text)!important; }
+.edit-profile-screen :is(.profile-editor-identity small,.profile-editor-section-heading small,
+  .profile-editor-avatar-choice span,.profile-avatar-choice span,.profile-editor-note) { color:var(--pe-muted)!important; }
+.edit-profile-screen :is(.profile-editor-field,.profile-editor-bio) { border-color:var(--pe-line)!important; }
+.edit-profile-screen :is(.profile-editor-field > input,.profile-editor-bio textarea) {
+  color:var(--pe-text)!important;
+  caret-color:var(--pe-text);
+  background:transparent!important;
+}
+.edit-profile-screen :is(.profile-editor-field > input::placeholder,.profile-editor-bio textarea::placeholder) { color:#747d8d!important; }
+.edit-profile-screen :is(.profile-editor-field:focus-within,.profile-editor-bio:focus-within) { background:#171b25!important; }
+.edit-profile-screen :is(.profile-editor-cover-upload,.profile-editor-auto-cover,
+  .profile-avatar-choices > summary,.profile-editor-photo-action) {
+  border:1px solid var(--pe-line)!important;
+  border-radius:999px;
+}
+.edit-profile-screen :is(.profile-editor-cover-upload,.profile-editor-auto-cover,
+  .profile-avatar-choices > summary) { background:#1b1f29!important; color:var(--pe-text)!important; }
+.edit-profile-screen .profile-editor-photo-action,
+.edit-profile-screen .profile-editor-header-save { background:#f5f6fa!important; color:#08090c!important; }
+.edit-profile-screen :is(button,input,textarea,summary):focus-visible {
+  outline:2px solid rgba(245,246,250,.86)!important;
+  outline-offset:3px;
+}
+.edit-profile-screen .profile-editor-avatar { border-color:#555d6b!important; }
+.edit-profile-screen .profile-editor-emoji { background:#252a35!important; color:var(--pe-text)!important; }
+
+/* Account and creator settings: shared compact control surfaces and readable hierarchy. */
+.ap-wrap {
+  background:#090a0e!important;
+  color:#f5f6fa!important;
+  color-scheme:dark;
+}
+.ap-wrap :is(h1,h2,h3,h4,b,strong,.ap-big,.ap-eyebrow,.ap-line,.ap-stat b,.ap-top-item) { color:#f5f6fa!important; }
+.ap-wrap :is(p,small,.ap-note,.ap-item small,.ap-stat small,.ap-stat span,.ap-eyebrow) { color:#a0a6b2; }
+.ap-wrap :is(.ap-card,.ap-overview-metric,.ap-stat,.ap-guide) {
+  background:#11131a!important;
+  border:1px solid rgba(255,255,255,.11)!important;
+  border-radius:16px;
+  color:#f5f6fa;
+  box-shadow:none;
+}
+.ap-wrap :is(.ap-icon,.ap-field,.ap-seg button,.ap-new) {
+  background:#1b1f29!important;
+  border:1px solid rgba(255,255,255,.11)!important;
+  color:#f5f6fa!important;
+}
+.ap-wrap :is(.ap-tabs,.ap-line,.ap-item,.ap-top-item) { border-color:rgba(255,255,255,.11)!important; }
+.ap-wrap .ap-tabs button { color:#a0a6b2!important; }
+.ap-wrap .ap-tabs button.on { color:#f5f6fa!important; border-bottom-color:#f5f6fa!important; }
+.ap-wrap .ap-seg button.on { background:#f5f6fa!important; color:#08090c!important; }
+.ap-wrap .ap-btn { background:#f5f6fa!important; color:#08090c!important; border-color:transparent!important; }
+.ap-wrap .ap-btn.ghost { background:#1b1f29!important; color:#f5f6fa!important; border-color:rgba(255,255,255,.11)!important; }
+.ap-wrap :is(input,textarea,select) { color-scheme:dark; }
+.ap-wrap .ap-skel { background:linear-gradient(90deg,#11131a,#20242e,#11131a)!important; }
+
+/* Authentication: retain brand artwork and form behavior, modernize the shell and controls. */
+#app .auth.ot-auth {
+  --ot-ink:#f5f6fa;
+  --ot-muted:#a0a6b2;
+  --ot-field-ink:#f5f6fa;
+  --ot-line:rgba(255,255,255,.14);
+  background:#090a0e!important;
+  color:#f5f6fa!important;
+  color-scheme:dark;
+}
+#app .auth.ot-auth .ot-art { color:#f5f6fa; }
+#app .auth.ot-auth :is(h1,.ot-eyebrow,.ot-lede,.ot-label,.ot-switch,.signup-policy-copy) { color:#f5f6fa!important; }
+#app .auth.ot-auth :is(.ot-lede,.ot-eyebrow,.ot-switch span,.ot-label small) { color:#a0a6b2!important; }
+#app .auth.ot-auth .field {
+  background:#151821!important;
+  color:#f5f6fa!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  border-radius:14px!important;
+  box-shadow:none!important;
+}
+#app .auth.ot-auth .field::placeholder { color:#858d9b!important; }
+#app .auth.ot-auth .field:focus {
+  background:#171b25!important;
+  border-color:#dce5ff!important;
+  box-shadow:0 0 0 3px rgba(220,229,255,.12)!important;
+}
+#app .auth.ot-auth .btn.primary {
+  background:#f5f6fa!important;
+  border-color:#f5f6fa!important;
+  color:#08090c!important;
+}
+#app .auth.ot-auth .btn.ghost {
+  background:#1b1f29!important;
+  border-color:rgba(255,255,255,.13)!important;
+  color:#f5f6fa!important;
+}
+#app .auth.ot-auth .btn.auth-link,
+#app .auth.ot-auth .auth-recovery-link,
+#app .auth.ot-auth .auth-step-back,
+#app .auth.ot-auth .signup-policy-copy a { color:#dce5ff!important; }
+#app .auth.ot-auth .auth-success { color:#a8d7b4!important; }
+#app .auth.ot-auth #err,
+#app .auth.ot-auth .signup-policy-unavailable { color:#ff9b9b!important; }
+#app .auth.ot-auth :is(.ot-rule,.auth-step-back:focus-visible,.auth-recovery-link:focus-visible) { border-color:rgba(255,255,255,.2); }
+#app .auth.ot-auth :is(button,input,textarea,a):focus-visible {
+  outline:2px solid rgba(245,246,250,.88)!important;
+  outline-offset:3px;
+}
+
+/* Profile storytelling shelves inherit the same dark system without filtering media. */
+#app .ot-profile-shelf {
+  --ot-ink:#f5f6fa;
+  --ot-muted:#a0a6b2;
+  --ot-line:rgba(255,255,255,.11);
+  color:#f5f6fa;
+}
+#app .ot-profile-shelf :is(.ot-quote-card,.ot-collection-card,.ot-create-collection) {
+  background:#11131a!important;
+  border-color:rgba(255,255,255,.11)!important;
+  color:#f5f6fa!important;
+}
+#app .ot-profile-shelf :is(.ot-quote-text,.ot-quote-byline,.ot-quote-caption,.ot-cover-initial) { color:#f5f6fa!important; }
+#app .ot-profile-shelf .ot-quote-card.has-photo::after {
+  background:linear-gradient(90deg,rgba(9,10,14,.94),rgba(9,10,14,.76) 72%,rgba(9,10,14,.48));
+}
+#app .ot-profile-shelf .ot-collection-cover { background:#171a22; }
+@media (prefers-reduced-motion:reduce) {
+  .edit-profile-screen *, .ap-wrap *, #app .auth.ot-auth * { transition:none!important; }
+}
