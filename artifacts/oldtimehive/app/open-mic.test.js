@@ -9,16 +9,16 @@ test("Open Mic has a dedicated Home header entry and opens its own experience",a
   assert.match(app,/import\("\.\/open-mic\.js"\)/);
   assert.match(app,/import "\.\/open-mic\.css"/);
 });
-test("Open Mic is a direct-join audio room with no hand-raise queue",async()=>{
+test("Open Mic is direct-join peer-to-peer audio with no speaker queue",async()=>{
   const source=await read("./open-mic.js");
-  assert.match(source,/livekit-client@2\.23\.0/);
-  assert.match(source,/new LK\.Room/);
-  assert.match(source,/RoomEvent\.ActiveSpeakersChanged/);
-  assert.match(source,/setMicrophoneEnabled\(false\)/);
-  assert.match(source,/data-om-action="mic"/);
+  assert.match(source,/new RTCPeerConnection/);
+  assert.match(source,/iceServers\(/);
+  assert.match(source,/publishOpenMic/);
+  assert.match(source,/subscribeOpenMic/);
+  assert.match(source,/replaceTrack/);
   assert.match(source,/Everyone can speak/);
-  assert.doesNotMatch(source,/raise hand|hand raise|request to speak|speaker queue/i);
-  assert.doesNotMatch(source,/new RTCPeerConnection/);
+  assert.doesNotMatch(source,/livekit|raise hand|hand raise|request to speak|speaker queue/i);
+  assert.doesNotMatch(source,/https?:\/\//);
 });
 test("Open Mic exposes host moderation, room sharing, and lifecycle heartbeats",async()=>{
   const source=await read("./open-mic.js");
@@ -31,4 +31,9 @@ test("Open Mic visual system respects phone safe areas and reduced motion",async
   assert.match(css,/env\(safe-area-inset-bottom\)/);
   assert.match(css,/prefers-reduced-motion/);
   assert.match(css,/max-width:380px/);
+});
+test("Open Mic header mic shortcut has a compact accessible target",async()=>{
+  const css=await read("./open-mic.css");
+  assert.match(css,/app-open-mic-shortcut/);
+  assert.match(css,/focus-visible/);
 });
