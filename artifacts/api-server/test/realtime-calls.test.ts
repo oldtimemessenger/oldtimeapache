@@ -60,7 +60,7 @@ describe("Cloudflare Open Mic group signaling validation",()=>{
     assert.equal(parseOpenMicSignalMessage(envelope({roomId,to:recipient,kind:"ice",payload:{candidate:{candidate:"candidate:1 1 UDP 123 192.0.2.1 1234 typ host",sdpMid:"0",sdpMLineIndex:0}}}))?.kind,"ice");
   });
   it("accepts host moderation and rejects malformed or untrusted room signals",()=>{
-    assert.equal(parseOpenMicSignalMessage(envelope({roomId,to:recipient,kind:"moderation",payload:{action:"mute"}}))?.kind,"moderation");
+    assert.equal(parseOpenMicSignalMessage(envelope({roomId,to:recipient,kind:"moderation",payload:{action:"mute",targetUserId:recipient}}))?.kind,"moderation");
     assert.equal(parseOpenMicSignalMessage(envelope({roomId:"not-a-room",to:recipient,kind:"offer",payload:{description:{type:"offer",sdp:"v=0"}}})),null);
     assert.equal(parseOpenMicSignalMessage(envelope({roomId,to:recipient,kind:"moderation",payload:{action:"delete-everyone"}})),null);
     assert.equal(parseOpenMicSignalMessage(envelope({roomId,to:recipient,kind:"answer",payload:{description:{type:"offer",sdp:"v=0"}}})),null);
