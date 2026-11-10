@@ -30,6 +30,10 @@ test("custom light and dark styles keep real vector layers and remove raster bas
   assert.equal(light.sources.dem, undefined);
   assert.notEqual(light.layers[0].paint["background-color"], dark.layers[0].paint["background-color"]);
   assert.equal(light.layers.find(layer => layer.id === "park").paint["fill-color"], "#a9d99a");
+  assert.equal(light.layers.find(layer => layer.id === "oldtime-sports-building-extrusions").type, "fill-extrusion");
+  assert.equal(light.layers.find(layer => layer.id === "oldtime-sports-building-extrusions").minzoom, 14);
+  assert.ok(light.layers.findIndex(layer => layer.id === "oldtime-sports-building-extrusions") <
+    light.layers.findIndex(layer => layer.id === "place-label"), "3D buildings sit below map labels");
   assert.equal(dark.layers.find(layer => layer.id === "water").paint["fill-color"], "#163f54");
   assert.notEqual(light.layers.find(layer => layer.id === "highway-minor").paint["line-color"],
     dark.layers.find(layer => layer.id === "highway-minor").paint["line-color"]);

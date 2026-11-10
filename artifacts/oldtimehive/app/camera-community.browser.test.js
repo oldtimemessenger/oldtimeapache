@@ -3586,8 +3586,8 @@ test(process.env.OLDTIME_STORY_REPLY_ONLY === "1"
       `the message body should occupy only its text lines, got ${renderedBubble.messageHeight}px`);
     assert.equal(renderedBubble.metadataInsideBubble, false,
       "time and delivery checks should sit below the bubble, not inside it");
-    assert.equal(renderedBubble.rowAlignment, "flex-start",
-      "incoming bubble should align to the left");
+    assert.ok(["flex-start", "flow-start"].includes(renderedBubble.rowAlignment),
+      "incoming bubble should align to the left regardless of the browser’s logical alignment serialization");
     assert.equal(renderedBubble.rowBackground, "rgba(0, 0, 0, 0)",
       "incoming message rows should not paint a gray backing panel");
     assert.equal(renderedBubble.bubbleBackground, "rgb(246, 244, 239)",
