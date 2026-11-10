@@ -1,6 +1,6 @@
 import { api, requestCloudApi } from "./store.js";
 import { iceServers } from "./comms/config.js";
-import { publishOpenMic, subscribeOpenMic, setCallTransportActive } from "./comms/signaling.js";
+import { publishOpenMic, subscribeOpenMic, setCallTransportActive, waitForCallSignaling } from "./comms/signaling.js";
 
 let active=null;
 const esc=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
@@ -201,6 +201,8 @@ async function enterRoom(state,payload){
   state.participants=payload.participants||[];state.peers=new Map();state.micOn=false;state.localStream=null;
   setCallTransportActive(true);
   state.unsubscribe=subscribeOpenMic(signal=>void onSignal(state,signal));
+  await waitForCallSignaling();
+  if(active!==state)return;
   state.view="room";state.busy=false;
   syncPeers(state);renderRoom(state);
   state.heartbeat=setInterval(()=>{void requestCloudApi(`${roomPath(state.roomInfo.id)}/heartbeat`,{method:"POST",body:{micOn:state.micOn}}).catch(()=>{});},20_000);
