@@ -97,7 +97,8 @@ function validOpenMicSignal(value:unknown):value is OpenMicSignal{
     return validDescription(payload.description,value.kind)&&keys.length===1&&keys[0]==="description";
   }
   if(value.kind==="ice")return validCandidate(payload.candidate)&&keys.length===1&&keys[0]==="candidate";
-  return ["mute","allow-mic","remove"].includes(String(payload.action))&&keys.length===1&&keys[0]==="action";
+  return ["mute","allow-mic","remove"].includes(String(payload.action))&&uuidPattern.test(String(payload.targetUserId??""))
+    &&keys.length===2&&keys.includes("action")&&keys.includes("targetUserId");
 }
 export function parseOpenMicSignalMessage(raw:string|ArrayBuffer):OpenMicSignal|null{
   const text=typeof raw==="string"?raw:new TextDecoder().decode(raw);
@@ -235,7 +236,7 @@ export class OldtimeRealtime {
     }catch{sendCallError(socket,signal,"Could not connect this call. Please try again.");}
   }
   private async handleOpenMicSignal(socket:Socket,signal:OpenMicSignal){
-    const attachment=socket.deserializeAttachment() as {sessionHash?:string;userId?:string}|null;
+    const attachment=socket.deserializeAttachment() as {sessionHash?:string;userId?:string;openMicWindowStart?:number;openMicSignalCount?:number}|null;
     if(!attachment?.userId||!attachment.sessionHash){socket.close(1008,"Reconnect to Open Mic.");return;}
     const now=Date.now(),sender=attachment.userId;
     const session=await this.env.DB.prepare("SELECT 1 FROM sessions WHERE user_id=? AND token_hash=? AND expires_at>?")
@@ -248,23 +249,25 @@ export class OldtimeRealtime {
     const senderMember=await this.env.DB.prepare("SELECT 1 FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
       .bind(signal.roomId,sender,now-90_000).first();
     if(!senderMember)return;
-    const signalWindowStart=Number(attachment.openMicWindowStart)||now;
-    const signalCount=now-signalWindowStart>10_000?1:(Number(attachment.openMicSignalCount)||0)+1;
-    if(signalCount>300){socket.close(1008,"Too many Open Mic signals.");return;}
-    socket.serializeAttachment({...attachment,openMicWindowStart:now-signalWindowStart>10_000?now:signalWindowStart,openMicSignalCount:signalCount});
-    const targetMember=await this.env.DB.prepare("SELECT host_muted FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
-      .bind(signal.roomId,signal.to,now-90_000).first<{host_muted:number}>();
-    const targetBan=await this.env.DB.prepare("SELECT 1 FROM open_mic_room_bans WHERE room_id=? AND user_id=?")
-      .bind(signal.roomId,signal.to).first();
+    const windowStart=Number(attachment.openMicWindowStart)||now;
+    const count=now-windowStart>10_000?1:(Number(attachment.openMicSignalCount)||0)+1;
+    if(count>300){socket.close(1008,"Too many Open Mic signals.");return;}
+    socket.serializeAttachment({...attachment,openMicWindowStart:now-windowStart>10_000?now:windowStart,openMicSignalCount:count});
+    const recipientMember=await this.env.DB.prepare("SELECT 1 FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
+      .bind(signal.roomId,signal.to,now-90_000).first();
     if(signal.kind==="moderation"){
+      const action=String(signal.payload.action),targetId=String(signal.payload.targetUserId);
       if(room.owner_id!==sender)return;
-      const action=String(signal.payload.action);
+      const targetMember=await this.env.DB.prepare("SELECT host_muted FROM open_mic_participants WHERE room_id=? AND user_id=?")
+        .bind(signal.roomId,targetId).first<{host_muted:number}>();
+      const targetBan=await this.env.DB.prepare("SELECT 1 FROM open_mic_room_bans WHERE room_id=? AND user_id=?")
+        .bind(signal.roomId,targetId).first();
       if(action==="remove"&&!targetBan)return;
       if(action==="mute"&&(!targetMember||targetMember.host_muted!==1))return;
       if(action==="allow-mic"&&(!targetMember||targetMember.host_muted!==0))return;
+      if(!recipientMember&&!(action==="remove"&&signal.to===targetId))return;
     }else{
-      if(!targetMember||targetBan)return;
-      if(await blocked(this.env.DB,sender,signal.to)||await blocked(this.env.DB,signal.to,sender))return;
+      if(!recipientMember||await blocked(this.env.DB,sender,signal.to)||await blocked(this.env.DB,signal.to,sender))return;
     }
     const target=this.env.REALTIME.get(this.env.REALTIME.idFromName(signal.to));
     try{
@@ -294,20 +297,22 @@ export class OldtimeRealtime {
     const senderMember=await this.env.DB.prepare("SELECT 1 FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
       .bind(input.roomId,sender,now-90_000).first();
     if(!senderMember)return json({error:"Sender left the room."},403);
+    const recipientMember=await this.env.DB.prepare("SELECT 1 FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
+      .bind(input.roomId,targetUser,now-90_000).first();
     if(kind==="moderation"){
-      if(room.owner_id!==sender)return json({error:"Only the host can moderate."},403);
+      if(room.owner_id!==sender||!uuidPattern.test(String(payload.targetUserId??"")))return json({error:"Only the host can moderate."},403);
+      const moderatedId=String(payload.targetUserId);
       if(payload.action==="remove"){
-        const banned=await this.env.DB.prepare("SELECT 1 FROM open_mic_room_bans WHERE room_id=? AND user_id=?").bind(input.roomId,targetUser).first();
-        if(!banned)return json({error:"Removal is not confirmed."},403);
+        const banned=await this.env.DB.prepare("SELECT 1 FROM open_mic_room_bans WHERE room_id=? AND user_id=?").bind(input.roomId,moderatedId).first();
+        if(!banned||(!recipientMember&&targetUser!==moderatedId))return json({error:"Removal is not confirmed."},403);
       }else{
-        const target=await this.env.DB.prepare("SELECT host_muted FROM open_mic_participants WHERE room_id=? AND user_id=?")
-          .bind(input.roomId,targetUser).first<{host_muted:number}>();
-        if(!target||target.host_muted!==(payload.action==="mute"?1:0))return json({error:"Mute state changed."},403);
+        const moderated=await this.env.DB.prepare("SELECT host_muted FROM open_mic_participants WHERE room_id=? AND user_id=?")
+          .bind(input.roomId,moderatedId).first<{host_muted:number}>();
+        if(!moderated||moderated.host_muted!==(payload.action==="mute"?1:0)||!recipientMember)
+          return json({error:"Mute state changed."},403);
       }
     }else{
-      const targetMember=await this.env.DB.prepare("SELECT 1 FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
-        .bind(input.roomId,targetUser,now-90_000).first();
-      if(!targetMember||await blocked(this.env.DB,sender,targetUser)||await blocked(this.env.DB,targetUser,sender))
+      if(!recipientMember||await blocked(this.env.DB,sender,targetUser)||await blocked(this.env.DB,targetUser,sender))
         return json({error:"Room membership changed."},403);
     }
     for(const socket of sockets){
