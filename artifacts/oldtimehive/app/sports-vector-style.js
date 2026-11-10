@@ -9,14 +9,14 @@ export const sportsRouteColor = workout => ROUTE_COLORS[workout?.activityType] |
 
 const PALETTES = {
   light: {
-    background: "#f8faf9", land: "#f5f6f3", park: "#dceee3", forest: "#d3e7d9",
-    water: "#d8eaf5", waterLine: "#8dbbd3", built: "#eceeeb", road: "#ffffff",
-    roadEdge: "#cbd3d9", majorRoad: "#fffdf7", label: "#42515b", boundary: "#b7c3c9",
+    background: "#eaf1e8", land: "#eef0df", park: "#a9d99a", forest: "#72b77d",
+    water: "#8bd5ee", waterLine: "#43a9d4", built: "#e4e5d8", road: "#fffef4",
+    roadEdge: "#c4d1b8", majorRoad: "#fff8dc", label: "#344b3b", boundary: "#9aaf9d",
   },
   dark: {
-    background: "#11171d", land: "#171e24", park: "#1e382d", forest: "#274332",
-    water: "#1b3444", waterLine: "#3c6b82", built: "#242b31", road: "#303b44",
-    roadEdge: "#11171d", majorRoad: "#46535e", label: "#d8e0e5", boundary: "#677780",
+    background: "#111c1b", land: "#192824", park: "#244d35", forest: "#326b43",
+    water: "#163f54", waterLine: "#347f9b", built: "#27352f", road: "#46534a",
+    roadEdge: "#15201b", majorRoad: "#68745d", label: "#e1eadb", boundary: "#607a69",
   },
 };
 
