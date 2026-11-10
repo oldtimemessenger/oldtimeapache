@@ -284,29 +284,34 @@ export class OldtimeRealtime {
     if(!isRecord(input)||!uuidPattern.test(String(input.roomId??""))||!uuidPattern.test(String(input.from??""))
       ||typeof input.kind!=="string"||!["offer","answer","ice","moderation"].includes(input.kind)||!isRecord(input.payload))
       return json({error:"Invalid Open Mic signal."},400);
+    const sockets=this.state.getWebSockets();
+    const attachments=sockets.map(socket=>socket.deserializeAttachment() as {sessionHash?:string;userId?:string}|null);
+    const targetUser=attachments.find(item=>item?.userId)?.userId||"";
+    if(!targetUser)return json({error:"Room recipient is offline."},404);
+    const now=Date.now(),sender=input.from as string,kind=input.kind as OpenMicSignalKind;
+    const payload=input.payload as Record<string,unknown>;
     const room=await this.env.DB.prepare("SELECT owner_id,status,updated_at FROM open_mic_rooms WHERE id=?")
       .bind(input.roomId).first<{owner_id:string;status:string;updated_at:number}>();
-    const now=Date.now(),sender=input.from as string,kind=input.kind as OpenMicSignalKind,payload=input.payload as Record<string,unknown>;
     if(!room||room.status!=="live"||room.updated_at<now-6*60*60*1000)return json({error:"Room ended."},404);
     const senderMember=await this.env.DB.prepare("SELECT 1 FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
       .bind(input.roomId,sender,now-90_000).first();
-    const targetMember=await this.env.DB.prepare("SELECT host_muted FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
-      .bind(input.roomId,(await this.env.DB.prepare("SELECT user_id FROM sessions WHERE user_id=? AND expires_at>? LIMIT 1").bind(this.state.getWebSockets().map(s=>(s.deserializeAttachment() as {userId?:string}|null)?.userId).find(Boolean)||"",now).first<{user_id:string}>())?.user_id||"",now-90_000).first();
-    const targetUser=(this.state.getWebSockets().map(s=>(s.deserializeAttachment() as {userId?:string}|null)?.userId).find(Boolean)||"");
-    if(!senderMember||!targetUser)return json({error:"Room membership changed."},403);
+    if(!senderMember)return json({error:"Sender left the room."},403);
     if(kind==="moderation"){
       if(room.owner_id!==sender)return json({error:"Only the host can moderate."},403);
       if(payload.action==="remove"){
         const banned=await this.env.DB.prepare("SELECT 1 FROM open_mic_room_bans WHERE room_id=? AND user_id=?").bind(input.roomId,targetUser).first();
         if(!banned)return json({error:"Removal is not confirmed."},403);
       }else{
-        const target=await this.env.DB.prepare("SELECT host_muted FROM open_mic_participants WHERE room_id=? AND user_id=?").bind(input.roomId,targetUser).first<{host_muted:number}>();
+        const target=await this.env.DB.prepare("SELECT host_muted FROM open_mic_participants WHERE room_id=? AND user_id=?")
+          .bind(input.roomId,targetUser).first<{host_muted:number}>();
         if(!target||target.host_muted!==(payload.action==="mute"?1:0))return json({error:"Mute state changed."},403);
       }
     }else{
-      if(!targetMember||await blocked(this.env.DB,sender,targetUser)||await blocked(this.env.DB,targetUser,sender))return json({error:"Room membership changed."},403);
+      const targetMember=await this.env.DB.prepare("SELECT 1 FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
+        .bind(input.roomId,targetUser,now-90_000).first();
+      if(!targetMember||await blocked(this.env.DB,sender,targetUser)||await blocked(this.env.DB,targetUser,sender))
+        return json({error:"Room membership changed."},403);
     }
-    const sockets=this.state.getWebSockets();
     for(const socket of sockets){
       if(socket.readyState!==1)continue;
       const attachment=socket.deserializeAttachment() as {sessionHash?:string;userId?:string}|null;
