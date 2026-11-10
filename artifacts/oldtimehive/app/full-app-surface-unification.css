@@ -1,0 +1,269 @@
+/* Oldtime full-app surface unification.
+   Presentation-only layer for secondary routes and detached feature panels.
+   Existing markup, icons, controls, media canvases and feature behavior remain unchanged. */
+
+:root {
+  --ot-night:#050609;
+  --ot-surface:#090a0e;
+  --ot-panel:#11131a;
+  --ot-panel-raised:#171a22;
+  --ot-ink:#f5f6fa;
+  --ot-muted:#a0a6b2;
+  --ot-hairline:rgba(255,255,255,.11);
+  --ot-focus:rgba(255,255,255,.82);
+}
+
+/* Detached sheets and portals must share the same app surface as routed screens. */
+:is(.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet,.rn-panel,
+  .remix-studio,.remix-overlay,.chat-attachment-panel,.chat-location-share-panel) {
+  color:var(--ot-ink);
+  color-scheme:dark;
+  background:var(--ot-panel)!important;
+  border-color:var(--ot-hairline)!important;
+  box-shadow:0 20px 64px rgba(0,0,0,.48);
+}
+:is(.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet,.rn-panel,
+  .remix-studio,.chat-attachment-panel,.chat-location-share-panel) :is(h1,h2,h3,h4,b,strong) {
+  color:var(--ot-ink);
+}
+:is(.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet,.rn-panel,
+  .remix-studio,.chat-attachment-panel,.chat-location-share-panel) :is(p,small,label,.muted,.hint,.sub) {
+  color:var(--ot-muted);
+}
+:is(.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet,.rn-panel,
+  .remix-studio,.chat-attachment-panel,.chat-location-share-panel) :is(input,textarea,select) {
+  color:var(--ot-ink)!important;
+  background:var(--ot-panel-raised)!important;
+  border-color:var(--ot-hairline)!important;
+  box-shadow:none!important;
+}
+:is(.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet,.rn-panel,
+  .remix-studio,.chat-attachment-panel,.chat-location-share-panel) :is(input,textarea,select)::placeholder {
+  color:#858c99!important;
+  opacity:1;
+}
+:is(.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet,.rn-panel,
+  .remix-studio,.chat-attachment-panel,.chat-location-share-panel) :is(button,a,[role="button"]) {
+  -webkit-tap-highlight-color:transparent;
+}
+:is(.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet,.rn-panel,
+  .remix-studio,.chat-attachment-panel,.chat-location-share-panel) :is(button,input,textarea,select,a,[role="button"]):focus-visible {
+  outline:2px solid var(--ot-focus);
+  outline-offset:2px;
+}
+
+/* Audio discovery, track details and remix tools. */
+.audio-panel :is(.ap-head,.ap-body,.ap-sec,.ap-list,.ap-row,.ap-note) {
+  background:transparent!important;
+  color:var(--ot-ink);
+  border-color:var(--ot-hairline)!important;
+}
+.audio-panel :is(.ap-row,.ap-list button,.ap-history button) {
+  border-bottom:1px solid var(--ot-hairline);
+}
+.audio-panel :is(.ap-text small,.ap-note,.ap-uses) { color:var(--ot-muted); }
+.audio-panel :is(.ap-primary,.ap-send) {
+  background:#f5f6fa!important;
+  color:#08090c!important;
+  border:0!important;
+}
+.audio-panel .ap-ghost {
+  background:transparent!important;
+  color:var(--ot-ink)!important;
+  border:1px solid var(--ot-hairline)!important;
+}
+.remix-studio :is(.rs-head,.rs-panel,.rs-toolbar,.rs-history,.rs-sticker-picker) {
+  background:var(--ot-panel)!important;
+  color:var(--ot-ink);
+  border-color:var(--ot-hairline)!important;
+}
+.remix-studio :is(.rs-text-editor,.rs-history button,.rs-sticker-picker button) {
+  background:var(--ot-panel-raised)!important;
+  color:var(--ot-ink)!important;
+  border-color:var(--ot-hairline)!important;
+}
+
+/* Share, save and recipient selection. */
+.share-recipient-panel :is(.srp-top,.srp-scroll,.srp-compose,.srp-preview,.srp-actions) {
+  background:transparent!important;
+  color:var(--ot-ink);
+  border-color:var(--ot-hairline)!important;
+}
+.share-recipient-panel :is(.srp-friend,.srp-preview,.srp-act) {
+  color:var(--ot-ink);
+}
+.share-recipient-panel .srp-friend:has(input:checked) .srp-face {
+  background:#20242e;
+  border-color:rgba(255,255,255,.35);
+}
+.share-recipient-panel .srp-send {
+  background:#f5f6fa!important;
+  color:#08090c!important;
+  border:0!important;
+}
+.saved-social-panel :is(.ss-head,.ss-body,.ss-foot,.ss-sec,.ss-row,.ss-preview) {
+  background:transparent!important;
+  color:var(--ot-ink);
+  border-color:var(--ot-hairline)!important;
+}
+.saved-social-panel :is(.ss-row-main,.ss-link,.ss-mini,.ss-ghost) {
+  color:var(--ot-ink)!important;
+}
+.saved-social-panel .ss-primary {
+  background:#f5f6fa!important;
+  color:#08090c!important;
+  border:0!important;
+}
+
+/* Places picker and place details: keep map tiles and imagery untouched. */
+.pp-sheet :is(.pp-map-header,.pp-search-row,.pp-results,.pp-result,.pp-actions,.pp-note) {
+  background:transparent!important;
+  color:var(--ot-ink);
+  border-color:var(--ot-hairline)!important;
+}
+.pp-sheet .pp-result.is-selected {
+  background:#20242e!important;
+  outline:1px solid rgba(255,255,255,.2);
+}
+.pp-sheet .pp-main {
+  background:#f5f6fa!important;
+  color:#08090c!important;
+  border:0!important;
+}
+.places-view {
+  color:var(--ot-ink);
+  background:var(--ot-night)!important;
+}
+.places-view :is(.places-heading,.places-intro,.places-search-results,.places-list,
+  .places-search-result,.places-card,.places-post,.place-detail) {
+  color:var(--ot-ink);
+  background:transparent!important;
+  border-color:var(--ot-hairline)!important;
+  box-shadow:none!important;
+}
+.places-view :is(.places-eyebrow,.places-intro,.places-search-result-copy small,
+  .places-search-status,.places-card-copy small,.place-detail-kicker) {
+  color:var(--ot-muted);
+}
+.places-view :is(.places-search,.places-search-form .places-search) {
+  background:var(--ot-panel-raised)!important;
+  border:1px solid var(--ot-hairline)!important;
+  color:var(--ot-ink)!important;
+}
+.places-view :is(.places-search input,.places-search input::placeholder) { color:var(--ot-ink); }
+.places-view .places-card-media { background:#101218; }
+
+/* Creator Center and professional analytics. */
+:is(.ct-wrap,.ap-wrap) {
+  color:var(--ot-ink)!important;
+  background:var(--ot-night)!important;
+}
+:is(.ct-wrap,.ap-wrap) :is(.ct-head,.ap-head,.ct-tabs,.ap-tabs,.ap-seg,
+  .ct-card,.ap-card,.ct-stats>div,.ap-stat,.ct-row,.ap-row,.ap-item,.ap-empty) {
+  color:var(--ot-ink);
+  background:var(--ot-panel)!important;
+  border-color:var(--ot-hairline)!important;
+  box-shadow:none!important;
+}
+:is(.ct-wrap,.ap-wrap) :is(.ct-head h1,.ap-head h1,.ct-card h2,.ap-card h2,
+  .ct-stats b,.ap-stat b,.ap-item b) { color:var(--ot-ink); }
+:is(.ct-wrap,.ap-wrap) :is(.ct-card p,.ct-note,.ct-state,.ap-note,.ap-item small,
+  .ap-stat small,.ap-stat span,.ap-card p) { color:var(--ot-muted); }
+:is(.ct-wrap,.ap-wrap) :is(.ct-tabs button,.ap-tabs button,.ap-seg button) {
+  color:var(--ot-muted);
+  background:transparent!important;
+}
+:is(.ct-wrap,.ap-wrap) :is(.ct-tabs button.on,.ap-tabs button.on,.ap-seg button.on) {
+  color:var(--ot-ink);
+  border-color:var(--ot-ink);
+}
+:is(.ct-wrap,.ap-wrap) :is(.ct-field,.ap-field,.ct-json) {
+  color:var(--ot-ink)!important;
+  background:var(--ot-panel-raised)!important;
+  border-color:var(--ot-hairline)!important;
+}
+:is(.ct-wrap,.ap-wrap) :is(.ct-btn:not(.ghost),.ap-btn:not(.ghost)) {
+  background:#f5f6fa!important;
+  color:#08090c!important;
+  border:0!important;
+}
+:is(.ct-wrap,.ap-wrap) :is(.ct-btn.ghost,.ap-btn.ghost) {
+  color:var(--ot-ink)!important;
+  background:transparent!important;
+  border:1px solid var(--ot-hairline)!important;
+}
+
+/* Moderation, support, guides and legal destinations. */
+:is(.mq,.hc,.guide-library,.oldtime-legal-page) {
+  color:var(--ot-ink)!important;
+  background:var(--ot-night)!important;
+}
+:is(.mq,.hc,.guide-library,.oldtime-legal-shell) :is(h1,h2,h3,h4,b,strong) { color:var(--ot-ink); }
+:is(.mq,.hc,.guide-library,.oldtime-legal-shell) :is(p,small,label,.muted,.note,.eyebrow) { color:var(--ot-muted); }
+.mq :is(.mq-header,.mq-row,.mq-empty,.mq-filter select,.mq-note textarea) {
+  background:var(--ot-panel)!important;
+  color:var(--ot-ink)!important;
+  border-color:var(--ot-hairline)!important;
+}
+.mq .mq-btn.mq-primary {
+  background:#f5f6fa!important;
+  color:#08090c!important;
+  border:0!important;
+}
+.hc :is(.hc-note,.hc-topic,.hc-report,.hc-fact,.hc-list,.hc-contact,.hc-form textarea) {
+  background:var(--ot-panel)!important;
+  color:var(--ot-ink);
+  border-color:var(--ot-hairline)!important;
+}
+.hc .hc-btn {
+  background:#f5f6fa!important;
+  color:#08090c!important;
+}
+.guide-library :is(.guide-preferences,.guide-preview-row,.guide-update,.guide-item) {
+  background:var(--ot-panel)!important;
+  color:var(--ot-ink);
+  border-color:var(--ot-hairline)!important;
+}
+.oldtime-legal-shell :is(header,footer,.oldtime-legal-document,.oldtime-legal-links) {
+  background:transparent!important;
+  color:var(--ot-ink);
+  border-color:var(--ot-hairline)!important;
+}
+.oldtime-legal-shell :is(a,.oldtime-legal-links a) { color:#dce5ff; }
+
+/* Chat preferences and secondary communication panels. */
+.chat-settings-screen {
+  color:var(--ot-ink)!important;
+  background:var(--ot-night)!important;
+}
+.chat-settings-screen :is(.chat-settings-titlebar,.chat-settings-content,
+  .chat-settings-section,.chat-settings-choice,.chat-settings-row) {
+  background:transparent!important;
+  color:var(--ot-ink);
+  border-color:var(--ot-hairline)!important;
+}
+.chat-settings-screen :is(.chat-settings-title,.chat-settings-section h2,
+  .chat-settings-section h3,.chat-settings-row b) { color:var(--ot-ink); }
+.chat-settings-screen :is(.chat-settings-description,.chat-settings-status) { color:var(--ot-muted); }
+.chat-settings-screen .chat-settings-choice[aria-checked="true"] {
+  background:#20242e!important;
+  color:var(--ot-ink)!important;
+}
+
+/* Keep creative media canvases, map tiles and uploaded content true to source. */
+:is(.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet,.rn-panel,
+  .remix-studio,.creative-editor,.cs-studio) :is(video,canvas,img,.maplibregl-map) {
+  color-scheme:normal;
+}
+@media (prefers-reduced-motion:reduce) {
+  :is(.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet,.rn-panel,
+    .remix-studio,.creative-editor,.cs-studio) *,
+  :is(.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet,.rn-panel,
+    .remix-studio,.creative-editor,.cs-studio) *::before,
+  :is(.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet,.rn-panel,
+    .remix-studio,.creative-editor,.cs-studio) *::after {
+    scroll-behavior:auto!important;
+    animation-duration:.01ms!important;
+    transition-duration:.01ms!important;
+  }
+}
