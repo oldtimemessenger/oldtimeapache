@@ -9,16 +9,14 @@ export const sportsRouteColor = workout => ROUTE_COLORS[workout?.activityType] |
 
 const PALETTES = {
   light: {
-    background: "#f6f8f1", land: "#edf3e6", park: "#b8e3ae", forest: "#8bc98e",
-    water: "#9dd8f2", waterLine: "#4b9bc2", built: "#e5e9e6", road: "#fffefa",
-    roadEdge: "#c1cdd0", majorRoad: "#fff5d8", label: "#38515c", boundary: "#b3c6c8",
-    building3d: "#d4dfd5",
+    background: "#eaf1e8", land: "#eef0df", park: "#a9d99a", forest: "#72b77d",
+    water: "#8bd5ee", waterLine: "#43a9d4", built: "#e4e5d8", road: "#fffef4",
+    roadEdge: "#c4d1b8", majorRoad: "#fff8dc", label: "#344b3b", boundary: "#9aaf9d", building3d: "#d4dfd5",
   },
   dark: {
-    background: "#11171d", land: "#171e24", park: "#1e593d", forest: "#245e3f",
-    water: "#1b3444", waterLine: "#3c6b82", built: "#29353a", road: "#303b44",
-    roadEdge: "#11171d", majorRoad: "#46535e", label: "#d8e0e5", boundary: "#677780",
-    building3d: "#31454b",
+    background: "#111c1b", land: "#192824", park: "#244d35", forest: "#326b43",
+    water: "#163f54", waterLine: "#347f9b", built: "#27352f", road: "#46534a",
+    roadEdge: "#15201b", majorRoad: "#68745d", label: "#e1eadb", boundary: "#607a69", building3d: "#31454b",
   },
 };
 
@@ -99,19 +97,25 @@ export function customizeSportsVectorStyle(input, theme = "light", { attribution
   if (vectorSource) vectorSource.attribution = attribution;
   style.layers.forEach(layer => styleLayer(layer, colors));
 
-  // Give the pitched flyover real building volume when the source provides footprints.
-  // The layer is zoom-gated and remains derived from the same attributed vector tiles.
+  // Add real vector-footprint building volume for pitched flyover/replay views.
+  // The layer is zoom-gated, uses the existing attributed vector source, and
+  // stays beneath labels so place names remain legible.
   const building = style.layers.find(layer => layer.type === "fill" &&
     layer["source-layer"] === "building" && style.sources[layer.source]?.type === "vector");
   if (building && !style.layers.some(layer => layer.id === "oldtime-sports-building-extrusions")) {
     const extrusion = {
-      id: "oldtime-sports-building-extrusions", type: "fill-extrusion",
-      source: building.source, "source-layer": "building", minzoom: 14,
+      id: "oldtime-sports-building-extrusions",
+      type: "fill-extrusion",
+      source: building.source,
+      "source-layer": "building",
+      minzoom: 14,
       paint: {
-        "fill-extrusion-color": colors.building3d,
+        "fill-extrusion-color": colors.building3d || (theme === "dark" ? "#31454b" : "#d4dfd5"),
         "fill-extrusion-height": ["interpolate", ["linear"], ["zoom"], 13, 0,
-          16, ["max", 6, ["coalesce", ["to-number", ["get", "render_height"]], ["to-number", ["get", "height"]], 8]]],
-        "fill-extrusion-base": ["coalesce", ["to-number", ["get", "render_min_height"]], ["to-number", ["get", "min_height"]], 0],
+          16, ["max", 6, ["coalesce", ["to-number", ["get", "render_height"]],
+            ["to-number", ["get", "height"]], 8]]],
+        "fill-extrusion-base": ["coalesce", ["to-number", ["get", "render_min_height"]],
+          ["to-number", ["get", "min_height"]], 0],
         "fill-extrusion-opacity": 0.88,
         "fill-extrusion-vertical-gradient": true,
       },
