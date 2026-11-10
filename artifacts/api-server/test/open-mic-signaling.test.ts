@@ -8,7 +8,7 @@ describe("Open Mic peer signaling validation",()=>{
   it("accepts bounded offers, answers and ICE candidates",()=>{
     assert.equal(parseOpenMicSignalMessage(envelope({roomId,to:recipient,kind:"offer",payload:{description:{type:"offer",sdp:"v=0\\r\\n"}}}))?.kind,"offer");
     assert.equal(parseOpenMicSignalMessage(envelope({roomId,to:recipient,kind:"answer",payload:{description:{type:"answer",sdp:"v=0\\r\\n"}}}))?.kind,"answer");
-    assert.equal(parseOpenMicSignalMessage(envelope({roomId,to:recipient,kind:"ice",payload:{candidate:{candidate:"candidate:1 1 UDP 123 192.0.2.1 1234 typ host",sdpMid:"0",sdpMLineIndex:0}}))?.kind,"ice");
+    assert.equal(parseOpenMicSignalMessage(envelope({roomId,to:recipient,kind:"ice",payload:{candidate:{candidate:"candidate:1 1 UDP 123 192.0.2.1 1234 typ host",sdpMid:"0",sdpMLineIndex:0}}}))?.kind,"ice");
   });
   it("accepts only host mute, allow-mic and removal control messages",()=>{
     for(const action of ["mute","allow-mic","remove"])assert.equal(
