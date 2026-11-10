@@ -5,7 +5,7 @@ type RoomRow = {
   created_at:number;updated_at:number;owner_name:string;owner_username:string;participant_count?:number;
 };
 type ParticipantRow = {
-  user_id:string;role:"host"|"listener";host_muted:number;joined_at:number;last_seen_at:number;
+  user_id:string;role:"host"|"listener";host_muted:number;mic_on:number;joined_at:number;last_seen_at:number;
   display_name:string;username:string;
 };
 const uuidPattern=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -24,14 +24,14 @@ async function visibleTo(db:Database,room:RoomRow,userId:string){
   return !await blocked(db,userId,room.owner_id)&&!await blocked(db,room.owner_id,userId);
 }
 async function roomDetails(db:Database,room:RoomRow,userId:string){
-  const people=await rows<ParticipantRow>(db,`SELECT p.user_id,p.role,p.host_muted,p.joined_at,p.last_seen_at,
+  const people=await rows<ParticipantRow>(db,`SELECT p.user_id,p.role,p.host_muted,p.mic_on,p.joined_at,p.last_seen_at,
     u.display_name,u.username FROM open_mic_participants p JOIN users u ON u.id=p.user_id
     WHERE p.room_id=? AND p.last_seen_at>? ORDER BY CASE p.role WHEN 'host' THEN 0 ELSE 1 END,p.joined_at ASC LIMIT ?`,
     room.id,now()-PRESENCE_MS,MAX_PEERS);
   const safePeople=[];
   for(const person of people)if(person.user_id===userId||(!await blocked(db,userId,person.user_id)&&!await blocked(db,person.user_id,userId))){
     safePeople.push({id:person.user_id,name:person.display_name||person.username,username:person.username,
-      role:person.role,hostMuted:!!person.host_muted,joinedAt:person.joined_at});
+      role:person.role,hostMuted:!!person.host_muted,micOn:!!person.mic_on,joinedAt:person.joined_at});
   }
   return {room:{id:room.id,title:room.title,topic:room.topic,visibility:room.visibility,status:room.status,
     createdAt:room.created_at,host:{id:room.owner_id,name:room.owner_name,username:room.owner_username},
@@ -92,11 +92,12 @@ async function joinRoom(db:Database,id:string,userId:string){
   const current=await participant(db,id,userId);
   return json({...details,role:current?.role||"listener",hostMuted:!!current?.host_muted,audioMode:"peer-to-peer",maxParticipants:MAX_PEERS});
 }
-async function heartbeat(db:Database,id:string,userId:string){
+async function heartbeat(request:Request,db:Database,id:string,userId:string){
   await getRoom(db,id,userId);
-  const timestamp=now();
-  const result=await db.prepare("UPDATE open_mic_participants SET last_seen_at=? WHERE room_id=? AND user_id=?")
-    .bind(timestamp,id,userId).run();
+  const input=object(await readBody(request,4*1024));
+  const timestamp=now(),micOn=input.micOn===true?1:0;
+  const result=await db.prepare("UPDATE open_mic_participants SET last_seen_at=?,mic_on=CASE WHEN host_muted=1 THEN 0 ELSE ? END WHERE room_id=? AND user_id=?")
+    .bind(timestamp,micOn,id,userId).run();
   if(!result.meta?.changes)throw new ApiError(403,"Join this room before sending a presence update.");
   await db.prepare("UPDATE open_mic_rooms SET updated_at=? WHERE id=?").bind(timestamp,id).run();
   return json({ok:true});
@@ -144,7 +145,7 @@ export async function openMicRequest(request:Request,db:Database,userId:string,p
     const id=parts[2],room=await getRoom(db,id,userId);
     if(parts.length===3&&request.method==="GET")return json(await roomDetails(db,room,userId));
     if(parts.length===4&&parts[3]==="join"&&request.method==="POST")return joinRoom(db,id,userId);
-    if(parts.length===4&&parts[3]==="heartbeat"&&request.method==="POST")return heartbeat(db,id,userId);
+    if(parts.length===4&&parts[3]==="heartbeat"&&request.method==="POST")return heartbeat(request,db,id,userId);
     if(parts.length===4&&parts[3]==="leave"&&request.method==="POST")return leaveRoom(db,id,userId);
     if(parts.length===4&&parts[3]==="moderate"&&request.method==="POST")return moderate(request,db,room,userId);
     if(parts.length===3&&request.method==="DELETE"){
