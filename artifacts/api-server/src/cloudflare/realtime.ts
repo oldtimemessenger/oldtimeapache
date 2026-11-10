@@ -248,6 +248,10 @@ export class OldtimeRealtime {
     const senderMember=await this.env.DB.prepare("SELECT 1 FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
       .bind(signal.roomId,sender,now-90_000).first();
     if(!senderMember)return;
+    const signalWindowStart=Number(attachment.openMicWindowStart)||now;
+    const signalCount=now-signalWindowStart>10_000?1:(Number(attachment.openMicSignalCount)||0)+1;
+    if(signalCount>300){socket.close(1008,"Too many Open Mic signals.");return;}
+    socket.serializeAttachment({...attachment,openMicWindowStart:now-signalWindowStart>10_000?now:signalWindowStart,openMicSignalCount:signalCount});
     const targetMember=await this.env.DB.prepare("SELECT host_muted FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
       .bind(signal.roomId,signal.to,now-90_000).first<{host_muted:number}>();
     const targetBan=await this.env.DB.prepare("SELECT 1 FROM open_mic_room_bans WHERE room_id=? AND user_id=?")
@@ -261,12 +265,6 @@ export class OldtimeRealtime {
     }else{
       if(!targetMember||targetBan)return;
       if(await blocked(this.env.DB,sender,signal.to)||await blocked(this.env.DB,signal.to,sender))return;
-      if(signal.kind==="offer"){
-        const windowStart=Number(attachment.openMicWindowStart)||now;
-        const count=now-windowStart>10_000?1:(Number(attachment.openMicSignalCount)||0)+1;
-        if(count>80){socket.close(1008,"Too many Open Mic signals.");return;}
-        socket.serializeAttachment({...attachment,openMicWindowStart:now-windowStart>10_000?now:windowStart,openMicSignalCount:count});
-      }
     }
     const target=this.env.REALTIME.get(this.env.REALTIME.idFromName(signal.to));
     try{
