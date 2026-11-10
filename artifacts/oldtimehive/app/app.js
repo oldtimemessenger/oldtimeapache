@@ -134,6 +134,7 @@ import "./profile-header-refinement.css";
 /* Last-loaded, color-only correction layer for verified light-surface text. */
 import "./foreground-consistency.css";
 import "./editorial-compact-redesign.css";
+import "./full-app-surface-unification.css";
 
 const $ = (s, r = document) => r.querySelector(s);
 const app = $("#app");
