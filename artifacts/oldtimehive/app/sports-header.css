@@ -1,0 +1,7 @@
+.home-header-actions{display:flex;align-items:center;gap:8px}
+.app-sports-shortcut{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:0 12px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:linear-gradient(135deg,#17251b,#111820);color:#f4f7fa;font:700 12px/1 var(--font,system-ui,sans-serif);letter-spacing:.01em;box-shadow:0 5px 16px rgba(0,0,0,.16);-webkit-tap-highlight-color:transparent}
+.app-sports-shortcut svg{width:17px;height:17px;fill:none;stroke:#c8ff4a;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.app-sports-shortcut[aria-disabled=true]{opacity:.84}
+.app-sports-shortcut:active{transform:scale(.96);background:#1c2a22}
+.app-sports-shortcut:focus-visible{outline:2px solid #c8ff4a;outline-offset:3px}
+@media(max-width:360px){.app-sports-shortcut{min-height:36px;padding:0 9px;gap:5px;font-size:11px}.app-sports-shortcut svg{width:16px;height:16px}}
