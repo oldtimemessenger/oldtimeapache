@@ -83,9 +83,6 @@ interface CloudflareEnv {
   OFFICIAL_ACCOUNT_CLAIM_EMAIL?: string;
   BLUE_BADGE_PURCHASES_ENABLED?: string;
   APPLE_APP_ID?: string;
-  OPEN_MIC_LIVEKIT_URL?: string;
-  OPEN_MIC_LIVEKIT_API_KEY?: string;
-  OPEN_MIC_LIVEKIT_API_SECRET?: string;
 }
 
 interface StoredUser {
@@ -785,11 +782,7 @@ async function handleRequest(
     if(!user)return json({error:"Your session has expired. Sign in again."},401);
     if(request.method!=="GET"&&!(await limitAttempts(request,env.DB,`open-mic:${user.id}`,40)))
       return json({error:"Too many Open Mic actions. Try again in a minute."},429);
-    return openMicRequest(request,env.DB,user.id,path,{
-      serverUrl:env.OPEN_MIC_LIVEKIT_URL,
-      apiKey:env.OPEN_MIC_LIVEKIT_API_KEY,
-      apiSecret:env.OPEN_MIC_LIVEKIT_API_SECRET,
-    });
+    return openMicRequest(request,env.DB,user.id,path);
   }
   if(path.startsWith("/analytics/")){
     const user=await authenticate(request,env.DB);
