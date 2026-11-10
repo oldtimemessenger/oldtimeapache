@@ -86,6 +86,26 @@ function validCallSignal(value:unknown):value is CallSignal {
       return keys.length===0;
   }
 }
+type OpenMicSignalKind="offer"|"answer"|"ice"|"moderation";
+interface OpenMicSignal {roomId:string;to:string;kind:OpenMicSignalKind;payload:Record<string,unknown>}
+function validOpenMicSignal(value:unknown):value is OpenMicSignal{
+  if(!isRecord(value)||!uuidPattern.test(String(value.roomId??""))||!uuidPattern.test(String(value.to??""))
+    ||typeof value.kind!=="string"||!["offer","answer","ice","moderation"].includes(value.kind)||!isRecord(value.payload))return false;
+  const payload=value.payload,keys=Object.keys(payload);
+  if(JSON.stringify(payload).length>20_000)return false;
+  if(value.kind==="offer"||value.kind==="answer"){
+    return validDescription(payload.description,value.kind)&&keys.length===1&&keys[0]==="description";
+  }
+  if(value.kind==="ice")return validCandidate(payload.candidate)&&keys.length===1&&keys[0]==="candidate";
+  return ["mute","allow-mic","remove"].includes(String(payload.action))&&keys.length===1&&keys[0]==="action";
+}
+export function parseOpenMicSignalMessage(raw:string|ArrayBuffer):OpenMicSignal|null{
+  const text=typeof raw==="string"?raw:new TextDecoder().decode(raw);
+  if(new TextEncoder().encode(text).byteLength>maxSignalBytes+512)return null;
+  try{const envelope=JSON.parse(text) as {event?:unknown;data?:unknown};
+    return envelope?.event==="open-mic:signal"&&validOpenMicSignal(envelope.data)?envelope.data:null;
+  }catch{return null;}
+}
 export function parseCallSignalMessage(raw:string|ArrayBuffer):CallSignal|null{
   const text=typeof raw==="string"?raw:new TextDecoder().decode(raw);
   if(new TextEncoder().encode(text).byteLength>maxSignalBytes)return null;
@@ -125,6 +145,7 @@ export class OldtimeRealtime {
       return new Response(null,{status:101,webSocket:pair[0]} as ResponseInit&{webSocket:Socket});
     }
     if(request.method==="POST"&&new URL(request.url).pathname==="/call-relay")return this.relayCall(request);
+    if(request.method==="POST"&&new URL(request.url).pathname==="/open-mic-relay")return this.relayOpenMic(request);
     if(request.method!=="POST"||new URL(request.url).pathname!=="/update")return json({error:"Method not allowed."},405);
     const sockets=this.state.getWebSockets();if(!sockets.length)return new Response(null,{status:204});
     const input=await request.json() as {userId:string;chatId?:string|null};
@@ -171,6 +192,8 @@ export class OldtimeRealtime {
   }
   async webSocketMessage(socket:Socket,message:string|ArrayBuffer){
     if(message==="ping")return;
+    const openMicSignal=parseOpenMicSignalMessage(message);
+    if(openMicSignal){await this.handleOpenMicSignal(socket,openMicSignal);return;}
     const signal=parseCallSignalMessage(message);
     if(!signal){socket.close(1008,"Invalid call signal.");return;}
     const attachment=socket.deserializeAttachment() as {
@@ -210,6 +233,90 @@ export class OldtimeRealtime {
       }));
       if(!response.ok)sendCallError(socket,signal,"Could not connect this call. Please try again.");
     }catch{sendCallError(socket,signal,"Could not connect this call. Please try again.");}
+  }
+  private async handleOpenMicSignal(socket:Socket,signal:OpenMicSignal){
+    const attachment=socket.deserializeAttachment() as {sessionHash?:string;userId?:string}|null;
+    if(!attachment?.userId||!attachment.sessionHash){socket.close(1008,"Reconnect to Open Mic.");return;}
+    const now=Date.now(),sender=attachment.userId;
+    const session=await this.env.DB.prepare("SELECT 1 FROM sessions WHERE user_id=? AND token_hash=? AND expires_at>?")
+      .bind(sender,attachment.sessionHash,now).first();
+    if(!session){socket.close(1008,"Your session expired.");return;}
+    if(sender===signal.to)return;
+    const room=await this.env.DB.prepare("SELECT owner_id,status,updated_at FROM open_mic_rooms WHERE id=?")
+      .bind(signal.roomId).first<{owner_id:string;status:string;updated_at:number}>();
+    if(!room||room.status!=="live"||room.updated_at<now-6*60*60*1000)return;
+    const senderMember=await this.env.DB.prepare("SELECT 1 FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
+      .bind(signal.roomId,sender,now-90_000).first();
+    if(!senderMember)return;
+    const targetMember=await this.env.DB.prepare("SELECT host_muted FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
+      .bind(signal.roomId,signal.to,now-90_000).first<{host_muted:number}>();
+    const targetBan=await this.env.DB.prepare("SELECT 1 FROM open_mic_room_bans WHERE room_id=? AND user_id=?")
+      .bind(signal.roomId,signal.to).first();
+    if(signal.kind==="moderation"){
+      if(room.owner_id!==sender)return;
+      const action=String(signal.payload.action);
+      if(action==="remove"&&!targetBan)return;
+      if(action==="mute"&&(!targetMember||targetMember.host_muted!==1))return;
+      if(action==="allow-mic"&&(!targetMember||targetMember.host_muted!==0))return;
+    }else{
+      if(!targetMember||targetBan)return;
+      if(await blocked(this.env.DB,sender,signal.to)||await blocked(this.env.DB,signal.to,sender))return;
+      if(signal.kind==="offer"){
+        const windowStart=Number(attachment.openMicWindowStart)||now;
+        const count=now-windowStart>10_000?1:(Number(attachment.openMicSignalCount)||0)+1;
+        if(count>80){socket.close(1008,"Too many Open Mic signals.");return;}
+        socket.serializeAttachment({...attachment,openMicWindowStart:now-windowStart>10_000?now:windowStart,openMicSignalCount:count});
+      }
+    }
+    const target=this.env.REALTIME.get(this.env.REALTIME.idFromName(signal.to));
+    try{
+      const response=await target.fetch(new Request("https://oldtime-realtime.internal/open-mic-relay",{
+        method:"POST",headers:{"content-type":"application/json"},
+        body:JSON.stringify({roomId:signal.roomId,from:sender,kind:signal.kind,payload:signal.payload}),
+      }));
+      if(!response.ok)try{socket.send(JSON.stringify({event:"open-mic:delivery-error",data:{roomId:signal.roomId,to:signal.to}}));}catch{}
+    }catch{}
+  }
+  private async relayOpenMic(request:Request){
+    const text=await request.text();
+    if(new TextEncoder().encode(text).byteLength>maxSignalBytes+512)return json({error:"Invalid Open Mic signal."},400);
+    let input:unknown;try{input=JSON.parse(text);}catch{return json({error:"Invalid Open Mic signal."},400);}
+    if(!isRecord(input)||!uuidPattern.test(String(input.roomId??""))||!uuidPattern.test(String(input.from??""))
+      ||typeof input.kind!=="string"||!["offer","answer","ice","moderation"].includes(input.kind)||!isRecord(input.payload))
+      return json({error:"Invalid Open Mic signal."},400);
+    const room=await this.env.DB.prepare("SELECT owner_id,status,updated_at FROM open_mic_rooms WHERE id=?")
+      .bind(input.roomId).first<{owner_id:string;status:string;updated_at:number}>();
+    const now=Date.now(),sender=input.from as string,kind=input.kind as OpenMicSignalKind,payload=input.payload as Record<string,unknown>;
+    if(!room||room.status!=="live"||room.updated_at<now-6*60*60*1000)return json({error:"Room ended."},404);
+    const senderMember=await this.env.DB.prepare("SELECT 1 FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
+      .bind(input.roomId,sender,now-90_000).first();
+    const targetMember=await this.env.DB.prepare("SELECT host_muted FROM open_mic_participants WHERE room_id=? AND user_id=? AND last_seen_at>?")
+      .bind(input.roomId,(await this.env.DB.prepare("SELECT user_id FROM sessions WHERE user_id=? AND expires_at>? LIMIT 1").bind(this.state.getWebSockets().map(s=>(s.deserializeAttachment() as {userId?:string}|null)?.userId).find(Boolean)||"",now).first<{user_id:string}>())?.user_id||"",now-90_000).first();
+    const targetUser=(this.state.getWebSockets().map(s=>(s.deserializeAttachment() as {userId?:string}|null)?.userId).find(Boolean)||"");
+    if(!senderMember||!targetUser)return json({error:"Room membership changed."},403);
+    if(kind==="moderation"){
+      if(room.owner_id!==sender)return json({error:"Only the host can moderate."},403);
+      if(payload.action==="remove"){
+        const banned=await this.env.DB.prepare("SELECT 1 FROM open_mic_room_bans WHERE room_id=? AND user_id=?").bind(input.roomId,targetUser).first();
+        if(!banned)return json({error:"Removal is not confirmed."},403);
+      }else{
+        const target=await this.env.DB.prepare("SELECT host_muted FROM open_mic_participants WHERE room_id=? AND user_id=?").bind(input.roomId,targetUser).first<{host_muted:number}>();
+        if(!target||target.host_muted!==(payload.action==="mute"?1:0))return json({error:"Mute state changed."},403);
+      }
+    }else{
+      if(!targetMember||await blocked(this.env.DB,sender,targetUser)||await blocked(this.env.DB,targetUser,sender))return json({error:"Room membership changed."},403);
+    }
+    const sockets=this.state.getWebSockets();
+    for(const socket of sockets){
+      if(socket.readyState!==1)continue;
+      const attachment=socket.deserializeAttachment() as {sessionHash?:string;userId?:string}|null;
+      if(attachment?.userId!==targetUser||!attachment.sessionHash)continue;
+      const active=await this.env.DB.prepare("SELECT 1 FROM sessions WHERE user_id=? AND token_hash=? AND expires_at>?")
+        .bind(targetUser,attachment.sessionHash,now).first();
+      if(!active){try{socket.close(1008,"Your session expired.");}catch{}continue;}
+      try{socket.send(JSON.stringify({event:"open-mic:signal",data:{roomId:input.roomId,from:sender,kind,payload}}));}catch{}
+    }
+    return new Response(null,{status:204});
   }
   // Acknowledge peer close frames explicitly so the hibernating socket finishes
   // its close handshake instead of leaving the client stuck in CLOSING.
