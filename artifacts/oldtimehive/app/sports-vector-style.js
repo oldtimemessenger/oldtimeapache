@@ -9,14 +9,16 @@ export const sportsRouteColor = workout => ROUTE_COLORS[workout?.activityType] |
 
 const PALETTES = {
   light: {
-    background: "#f8faf9", land: "#f5f6f3", park: "#dceee3", forest: "#d3e7d9",
-    water: "#d8eaf5", waterLine: "#8dbbd3", built: "#eceeeb", road: "#ffffff",
-    roadEdge: "#cbd3d9", majorRoad: "#fffdf7", label: "#42515b", boundary: "#b7c3c9",
+    background: "#f6f8f1", land: "#edf3e6", park: "#b8e3ae", forest: "#8bc98e",
+    water: "#9dd8f2", waterLine: "#4b9bc2", built: "#e5e9e6", road: "#fffefa",
+    roadEdge: "#c1cdd0", majorRoad: "#fff5d8", label: "#38515c", boundary: "#b3c6c8",
+    building3d: "#d4dfd5",
   },
   dark: {
-    background: "#11171d", land: "#171e24", park: "#1e382d", forest: "#274332",
-    water: "#1b3444", waterLine: "#3c6b82", built: "#242b31", road: "#303b44",
+    background: "#11171d", land: "#171e24", park: "#1e593d", forest: "#245e3f",
+    water: "#1b3444", waterLine: "#3c6b82", built: "#29353a", road: "#303b44",
     roadEdge: "#11171d", majorRoad: "#46535e", label: "#d8e0e5", boundary: "#677780",
+    building3d: "#31454b",
   },
 };
 
@@ -96,6 +98,27 @@ export function customizeSportsVectorStyle(input, theme = "light", { attribution
   const vectorSource = Object.values(style.sources).find(source => source?.type === "vector");
   if (vectorSource) vectorSource.attribution = attribution;
   style.layers.forEach(layer => styleLayer(layer, colors));
+
+  // Give the pitched flyover real building volume when the source provides footprints.
+  // The layer is zoom-gated and remains derived from the same attributed vector tiles.
+  const building = style.layers.find(layer => layer.type === "fill" &&
+    layer["source-layer"] === "building" && style.sources[layer.source]?.type === "vector");
+  if (building && !style.layers.some(layer => layer.id === "oldtime-sports-building-extrusions")) {
+    const extrusion = {
+      id: "oldtime-sports-building-extrusions", type: "fill-extrusion",
+      source: building.source, "source-layer": "building", minzoom: 14,
+      paint: {
+        "fill-extrusion-color": colors.building3d,
+        "fill-extrusion-height": ["interpolate", ["linear"], ["zoom"], 13, 0,
+          16, ["max", 6, ["coalesce", ["to-number", ["get", "render_height"]], ["to-number", ["get", "height"]], 8]]],
+        "fill-extrusion-base": ["coalesce", ["to-number", ["get", "render_min_height"]], ["to-number", ["get", "min_height"]], 0],
+        "fill-extrusion-opacity": 0.88,
+        "fill-extrusion-vertical-gradient": true,
+      },
+    };
+    const labels = style.layers.findIndex(layer => layer.type === "symbol");
+    style.layers.splice(labels < 0 ? style.layers.length : labels, 0, extrusion);
+  }
   return style;
 }
 
