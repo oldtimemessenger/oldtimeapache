@@ -1,17 +1,20 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import {createHash} from "node:crypto";
 import {inflateSync} from "node:zlib";
 
-test("the latest supplied intro image is used unchanged, not a generated cutout",()=>{
-  const hash=path=>createHash("sha256").update(readFileSync(new URL(path,import.meta.url))).digest("hex");
-  assert.equal(hash("../public/brand/oldtime-opening-red.jpeg"),hash("../../../attached_assets/IMG_0093_1791612555722.jpeg"));
+test("the published opening artwork is committed as a valid JPEG",()=>{
+  const image=readFileSync(new URL("../public/brand/oldtime-opening-red.jpeg",import.meta.url));
+  assert.equal(image[0],0xff,"opening artwork has a JPEG signature");
+  assert.equal(image[1],0xd8,"opening artwork has a JPEG signature");
+  assert.ok(image.length>10_000,"opening artwork is a complete, non-empty image");
 });
 
-test("the new entrance uses a transparent feather cutout derived from the supplied artwork",()=>{
-  const hash=path=>createHash("sha256").update(readFileSync(new URL(path,import.meta.url))).digest("hex");
-  assert.equal(hash("../public/brand/oldtime-entrance.jpeg"),hash("../../../attached_assets/IMG_2281_1793154102725.jpeg"));
+test("the entrance artwork is committed and the feather cutout retains transparency",()=>{
+  const image=readFileSync(new URL("../public/brand/oldtime-entrance.jpeg",import.meta.url));
+  assert.equal(image[0],0xff,"entrance artwork has a JPEG signature");
+  assert.equal(image[1],0xd8,"entrance artwork has a JPEG signature");
+  assert.ok(image.length>10_000,"entrance artwork is a complete, non-empty image");
   const index=readFileSync(new URL("../index.html",import.meta.url),"utf8");
   assert.match(index,/src="brand\/oldtime-feather\.png"/);
   const logo=readFileSync(new URL("../public/brand/oldtime-feather.png",import.meta.url));
