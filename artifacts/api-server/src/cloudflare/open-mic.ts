@@ -85,7 +85,7 @@ async function joinRoom(db:Database,id:string,userId:string){
   if(!existing&&(Number(count?.total)||0)>=MAX_PEERS)throw new ApiError(409,"This room is full right now. Open Mic currently supports up to eight people so everyone can speak clearly.");
   const timestamp=now();
   await db.prepare(`INSERT INTO open_mic_participants(room_id,user_id,role,host_muted,joined_at,last_seen_at)
-    VALUES(?,?,'listener',0,?,?) ON CONFLICT(room_id,user_id) DO UPDATE SET last_seen_at=excluded.last_seen_at`)
+    VALUES(?,?,'listener',0,?,?) ON CONFLICT(room_id,user_id) DO UPDATE SET last_seen_at=excluded.last_seen_at,mic_on=0`)
     .bind(id,userId,timestamp,timestamp).run();
   await db.prepare("UPDATE open_mic_rooms SET updated_at=? WHERE id=?").bind(timestamp,id).run();
   const details=await roomDetails(db,room,userId);
@@ -131,8 +131,8 @@ async function moderate(request:Request,db:Database,room:RoomRow,userId:string){
       db.prepare("DELETE FROM open_mic_participants WHERE room_id=? AND user_id=?").bind(room.id,target),
     ]);
   }else{
-    await db.prepare("UPDATE open_mic_participants SET host_muted=? WHERE room_id=? AND user_id=?")
-      .bind(action==="mute"?1:0,room.id,target).run();
+    await db.prepare("UPDATE open_mic_participants SET host_muted=?,mic_on=CASE WHEN ?=1 THEN 0 ELSE mic_on END WHERE room_id=? AND user_id=?")
+      .bind(action==="mute"?1:0,action==="mute"?1:0,room.id,target).run();
   }
   return json({ok:true,action,targetUserId:target});
 }
