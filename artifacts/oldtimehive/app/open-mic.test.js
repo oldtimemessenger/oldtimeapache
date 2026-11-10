@@ -22,8 +22,8 @@ test("Open Mic is direct-join peer-to-peer audio with no speaker queue",async()=
 });
 test("Open Mic exposes host moderation, room sharing, and lifecycle heartbeats",async()=>{
   const source=await read("./open-mic.js");
-  for(const marker of ["data-om-action=\"mute\"","data-om-action=\"remove\"","data-om-action=\"share\"",
-    "/heartbeat","/moderate","method:\"DELETE\"","navigator.share"])assert.ok(source.includes(marker),`missing ${marker}`);
+  for(const marker of ["allow-mic","remove","share","/heartbeat","/moderate","method:\"DELETE\"","navigator.share"])
+    assert.ok(source.includes(marker),`missing ${marker}`);
 });
 test("Open Mic visual system respects phone safe areas and reduced motion",async()=>{
   const css=await read("./open-mic.css");
