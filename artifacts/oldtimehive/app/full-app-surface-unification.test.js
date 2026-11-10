@@ -30,3 +30,13 @@ test("secondary destinations receive consistent styling without replacing creati
   assert.match(css, /video,canvas,img,\.maplibregl-map/);
   assert.match(css, /creative-editor/);
 });
+
+test("account library surfaces use the unified dark system and preserve media", () => {
+  for (const selector of [
+    ".acl", ".acl-head", ".acl-tabs", ".acl-tile", ".acl-col",
+    ".acl-sound", ".acl-prefs", ".acl-sheet", ".acl-skel"
+  ]) assert.ok(css.includes(selector), `Missing account library treatment: ${selector}`);
+  assert.match(css, /\.acl\s*\{[\s\S]*?background:var\(--ot-night\)!important/);
+  assert.doesNotMatch(css, /^img\s*\{/m);
+  assert.match(css, /\.acl \.acl-btn-primary/);
+});
