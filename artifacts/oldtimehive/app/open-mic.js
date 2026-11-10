@@ -120,6 +120,7 @@ function attachPeer(state,person,initiator){
     }
     const stream=event.streams?.[0]||new MediaStream([track]);
     peer.audio.srcObject=stream;
+    peer.audio.muted=!!state.participants.find(person=>person.id===peer.id)?.hostMuted;
     void peer.audio.play().catch(()=>{state.audioBlocked=true;});
   };
   pc.onconnectionstatechange=()=>{
@@ -141,21 +142,35 @@ async function makeOffer(state,peer){
 }
 async function onSignal(state,signal){
   if(active!==state||!state.roomInfo||signal.roomId!==state.roomInfo.id)return;
-  const from=signal.from;
+  const from=signal.from,myId=api.cloudAccountId();
   if(signal.kind==="moderation"){
-    const action=signal.payload?.action;
-    if(action==="remove"){state.leaving=true;await leave(state,false,true,"The host removed you from this room.");return;}
-    if(action==="mute"){
-      state.localMutedByHost=true;state.micOn=false;
-      state.localStream?.getAudioTracks().forEach(track=>track.enabled=false);
-      for(const peer of state.peers.values())await peer.sender.replaceTrack(null).catch(()=>{});
-      renderRoom(state);return;
+    const action=signal.payload?.action,targetId=signal.payload?.targetUserId;
+    if(typeof targetId!=="string")return;
+    if(action==="remove"){
+      if(targetId===myId){await leave(state,false,true,"The host removed you from this room.");return;}
+      const removed=state.peers.get(targetId);removed?.pc.close();removed?.audio?.remove();state.peers.delete(targetId);
+      return;
     }
-    if(action==="allow-mic"){state.localMutedByHost=false;renderRoom(state);return;}
+    const target=state.peers.get(targetId);
+    if(action==="mute"){
+      if(targetId===myId){
+        state.localMutedByHost=true;state.micOn=false;
+        state.localStream?.getAudioTracks().forEach(track=>track.enabled=false);
+        for(const peer of state.peers.values())await peer.sender.replaceTrack(null).catch(()=>{});
+        renderRoom(state);
+      }else if(target?.audio){target.audio.muted=true;target.mutedByHost=true;}
+      return;
+    }
+    if(action==="allow-mic"){
+      if(targetId===myId){state.localMutedByHost=false;renderRoom(state);}
+      else if(target?.audio){target.audio.muted=false;target.mutedByHost=false;}
+      return;
+    }
+    return;
   }
   const person=state.participants.find(item=>item.id===from);
   if(!person)return;
-  const peer=attachPeer(state,person,api.cloudAccountId()<from);
+  const peer=attachPeer(state,person,myId<from);
   if(!peer)return;
   try{
     if(signal.kind==="offer"){
@@ -265,7 +280,12 @@ async function toggleMic(state){
 async function moderate(state,targetUserId,action){
   try{
     await requestCloudApi(`${roomPath(state.roomInfo.id)}/moderate`,{method:"POST",body:{targetUserId,action}});
-    sendSignal(state,targetUserId,"moderation",{action});
+    for(const person of state.participants)if(person.id!==api.cloudAccountId()){
+      try{sendSignal(state,person.id,"moderation",{action,targetUserId});}catch{}
+    }
+    if(action==="remove"){const peer=state.peers.get(targetUserId);peer?.pc.close();peer?.audio?.remove();state.peers.delete(targetUserId);}
+    if(action==="mute"){const peer=state.peers.get(targetUserId);if(peer?.audio)peer.audio.muted=true;}
+    if(action==="allow-mic"){const peer=state.peers.get(targetUserId);if(peer?.audio)peer.audio.muted=false;}
     await refreshDetails(state);
   }catch(error){
     const notice=state.root.querySelector("#om-room-error");if(notice)notice.textContent=error.message||"Moderation failed.";
