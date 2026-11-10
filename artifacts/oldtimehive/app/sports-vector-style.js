@@ -11,12 +11,12 @@ const PALETTES = {
   light: {
     background: "#eaf1e8", land: "#eef0df", park: "#a9d99a", forest: "#72b77d",
     water: "#8bd5ee", waterLine: "#43a9d4", built: "#e4e5d8", road: "#fffef4",
-    roadEdge: "#c4d1b8", majorRoad: "#fff8dc", label: "#344b3b", boundary: "#9aaf9d",
+    roadEdge: "#c4d1b8", majorRoad: "#fff8dc", label: "#344b3b", boundary: "#9aaf9d", building3d: "#d4dfd5",
   },
   dark: {
     background: "#111c1b", land: "#192824", park: "#244d35", forest: "#326b43",
     water: "#163f54", waterLine: "#347f9b", built: "#27352f", road: "#46534a",
-    roadEdge: "#15201b", majorRoad: "#68745d", label: "#e1eadb", boundary: "#607a69",
+    roadEdge: "#15201b", majorRoad: "#68745d", label: "#e1eadb", boundary: "#607a69", building3d: "#31454b",
   },
 };
 
@@ -96,6 +96,33 @@ export function customizeSportsVectorStyle(input, theme = "light", { attribution
   const vectorSource = Object.values(style.sources).find(source => source?.type === "vector");
   if (vectorSource) vectorSource.attribution = attribution;
   style.layers.forEach(layer => styleLayer(layer, colors));
+
+  // Add real vector-footprint building volume for pitched flyover/replay views.
+  // The layer is zoom-gated, uses the existing attributed vector source, and
+  // stays beneath labels so place names remain legible.
+  const building = style.layers.find(layer => layer.type === "fill" &&
+    layer["source-layer"] === "building" && style.sources[layer.source]?.type === "vector");
+  if (building && !style.layers.some(layer => layer.id === "oldtime-sports-building-extrusions")) {
+    const extrusion = {
+      id: "oldtime-sports-building-extrusions",
+      type: "fill-extrusion",
+      source: building.source,
+      "source-layer": "building",
+      minzoom: 14,
+      paint: {
+        "fill-extrusion-color": colors.building3d || (theme === "dark" ? "#31454b" : "#d4dfd5"),
+        "fill-extrusion-height": ["interpolate", ["linear"], ["zoom"], 13, 0,
+          16, ["max", 6, ["coalesce", ["to-number", ["get", "render_height"]],
+            ["to-number", ["get", "height"]], 8]]],
+        "fill-extrusion-base": ["coalesce", ["to-number", ["get", "render_min_height"]],
+          ["to-number", ["get", "min_height"]], 0],
+        "fill-extrusion-opacity": 0.88,
+        "fill-extrusion-vertical-gradient": true,
+      },
+    };
+    const labels = style.layers.findIndex(layer => layer.type === "symbol");
+    style.layers.splice(labels < 0 ? style.layers.length : labels, 0, extrusion);
+  }
   return style;
 }
 
