@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { ApiError, blocked, json, rows, type Database } from "./runtime";
+import { ApiError, blocked, body as readBody, json, object, rows, type Database } from "./runtime";
 
 export interface OpenMicConfig {
   serverUrl?: string;
@@ -105,7 +105,7 @@ async function listRooms(db:Database,userId:string){
 }
 async function createRoom(request:Request,db:Database,userId:string,config:OpenMicConfig){
   if(!liveKitReady(config))throw new ApiError(503,"Open Mic audio is being prepared. The live audio server is not connected yet.");
-  const input=await request.json().catch(()=>null) as Record<string,unknown>|null;
+  const input=object(await readBody(request,8*1024));
   const title=clean(input?.title,80),topic=clean(input?.topic,140),visibility=input?.visibility==="unlisted"?"unlisted":"public";
   if(title.length<3)throw new ApiError(400,"Give your Open Mic room a title of at least 3 characters.");
   const active=await db.prepare("SELECT id FROM open_mic_rooms WHERE owner_id=? AND status='live' AND updated_at>? LIMIT 1")
@@ -164,7 +164,7 @@ async function leaveRoom(db:Database,id:string,userId:string,config:OpenMicConfi
 }
 async function moderate(request:Request,db:Database,room:RoomRow,userId:string,config:OpenMicConfig){
   if(room.owner_id!==userId)throw new ApiError(403,"Only the room host can manage participants.");
-  const input=await request.json().catch(()=>null) as Record<string,unknown>|null;
+  const input=object(await readBody(request,8*1024));
   const target=clean(input?.targetUserId,64),action=input?.action;
   if(!uuidPattern.test(target)||!["mute","allow-mic","remove"].includes(String(action)))throw new ApiError(400,"Choose a valid participant and moderation action.");
   if(target===userId)throw new ApiError(400,"You cannot moderate your own host microphone.");
