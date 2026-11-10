@@ -88,8 +88,9 @@ function renderCreate(state){
       <p class="om-form-error" id="om-form-error" role="alert"></p></form></section>`;
 }
 function renderRoom(state){
-  const room=state.roomInfo||{},people=state.participants||[],me=api.me(),activeIds=state.activeSpeakers||new Set();
-  const local=people.find(person=>person.id===me?.id);
+  const room=state.roomInfo||{},people=state.participants||[],me=api.me(),myId=api.cloudAccountId(),activeIds=state.activeSpeakers||new Set();
+  const local=people.find(person=>person.id===myId);
+  state.localMutedByHost=!!local?.hostMuted;
   const host=state.role==="host";
   const activePeople=people.filter(person=>activeIds.has(person.id));
   const listeners=people.filter(person=>!activeIds.has(person.id));
@@ -141,7 +142,7 @@ async function connect(state,payload){
   await room.connect(payload.serverUrl,payload.token);
   if(active!==state){await room.disconnect();return;}
   await room.localParticipant.setMicrophoneEnabled(false);
-  state.connected=true;
+  state.connected=true;state.busy=false;
   await refreshDetails(state);
   renderRoom(state);
   state.heartbeat=setInterval(()=>{void requestCloudApi(`${roomPath(state.roomInfo.id)}/heartbeat`,{method:"POST",body:{}}).catch(()=>{});},20_000);
@@ -200,7 +201,7 @@ async function leave(state,end=false){
     if(end&&id)await requestCloudApi(roomPath(id),{method:"DELETE"});
     else if(id)await requestCloudApi(`${roomPath(id)}/leave`,{method:"POST",body:{}});
   }catch{}
-  await room?.disconnect();state.room=null;state.connected=false;state.leaving=false;
+  await room?.disconnect();state.room=null;state.connected=false;state.leaving=false;state.roomInfo=null;state.participants=[];state.activeSpeakers=new Set();state.role="listener";state.micOn=false;
   await loadLobby(state);
 }
 async function share(state){
@@ -240,6 +241,7 @@ function bind(state){
   });
 }
 export function openMic({roomId=""}={}){
+  roomId=roomId||new URL(location.href).searchParams.get("openMic")||"";
   if(active){active.root.focus?.();return active;}
   const root=createOverlay(),state={root,room:null,roomInfo:null,participants:[],activeSpeakers:new Set(),role:"listener",
     view:"lobby",busy:false,leaving:false,micOn:false,heartbeat:null,poll:null,rooms:[],audioReady:false};
