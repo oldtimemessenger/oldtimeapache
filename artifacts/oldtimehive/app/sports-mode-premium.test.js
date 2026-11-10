@@ -34,7 +34,7 @@ test("Sports map styling adds real building extrusions without replacing route d
   const style = await readFile(new URL("./sports-vector-style.js", import.meta.url), "utf8");
   assert.match(style, /oldtime-sports-building-extrusions/);
   assert.match(style, /fill-extrusion-height/);
-  assert.match(style, /source-layer: "building"/);
+  assert.match(style, /layer\["source-layer"\]\s*===\s*"building"/);
   assert.match(style, /fill-extrusion-vertical-gradient/);
   assert.match(style, /OPENFREEMAP_CREDITS/);
 });
