@@ -8,10 +8,10 @@
   box-shadow:0 5px 16px rgba(30,91,55,.12);cursor:pointer;
 }
 #app .phone .app-sports-shortcut svg{width:17px;height:17px;display:block;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-#app .phone .home-primary-row{padding-right:112px}
-#app .phone .home-primary-row>.app-search-shortcut{right:76px;left:auto}
+#app .phone .home-primary-row:has(.app-sports-shortcut){padding-right:112px}
+#app .phone .home-primary-row:has(.app-sports-shortcut)>.app-search-shortcut{right:76px;left:auto}
 @media(max-width:360px){
  #app .phone .app-sports-shortcut{padding-inline:9px;font-size:11px}
- #app .phone .home-primary-row{padding-right:104px}
- #app .phone .home-primary-row>.app-search-shortcut{right:68px}
+ #app .phone .home-primary-row:has(.app-sports-shortcut){padding-right:104px}
+ #app .phone .home-primary-row:has(.app-sports-shortcut)>.app-search-shortcut{right:68px}
 }
