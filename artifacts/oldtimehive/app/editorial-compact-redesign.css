@@ -1,0 +1,154 @@
+/* Oldtime editorial-social refresh.
+   Presentation only: preserves existing markup, components, icons, brand tokens and behavior.
+   Keep the established royal-blue / burgundy identity; do not introduce a new palette. */
+#app {
+  color:var(--ot-color-text,var(--color-ink,#17191c));
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+#app .phone {
+  --editorial-gutter:14px;
+  --editorial-hairline:color-mix(in srgb,var(--ot-color-border,var(--color-border,#e5e7eb)) 76%,transparent);
+}
+#app .phone :is(.topbar,.community-header,.chat-header,.settings-header,.search-app-header,.profile-editor-header) {
+  padding-left:var(--editorial-gutter);
+  padding-right:var(--editorial-gutter);
+  box-shadow:none;
+}
+#app .phone :is(.topbar,.community-header,.chat-header,.settings-header,.search-app-header,.profile-editor-header) :is(h1,h2,.title) {
+  letter-spacing:-.035em;
+  font-weight:720;
+}
+#app .phone :is(.page,.scroll,.settings-content,.community-screen,.search-screen) {
+  scrollbar-width:none;
+}
+#app .phone :is(.page,.settings-content,.community-screen,.search-screen) {
+  padding-left:var(--editorial-gutter);
+  padding-right:var(--editorial-gutter);
+}
+/* Icon identity is intentionally untouched. Remove decorative circles and oversized chrome. */
+#app .phone :is(
+  .post-actions-menu > summary,.profile-post-menu > summary,.post-edit-menu > summary,
+  .comment-more,.profile-actions-open,[data-cmore],.xe-cap-more,
+  .community-header-action,.community-search-button,.chat-action,.chat-back,.detail-back,
+  .search-app-header .community-search-button,.clip-float-control,.ot-video-float-button
+) {
+  border:0!important;
+  border-radius:10px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#app .phone :is(
+  .post-actions-menu > summary,.profile-post-menu > summary,.post-edit-menu > summary,
+  .comment-more,.profile-actions-open,[data-cmore],.xe-cap-more,
+  .community-header-action,.community-search-button,.chat-action,.chat-back,.detail-back,
+  .search-app-header .community-search-button
+):is(:hover,:focus-visible,:active) {
+  background:var(--color-surface-secondary,#f2f4f7)!important;
+  color:var(--color-ink,#17191c);
+}
+#app .phone :is(.post-actions-menu > summary,.profile-post-menu > summary,.post-edit-menu > summary) {
+  width:38px;min-width:38px;height:38px;min-height:38px;
+}
+#app .phone :is(.community-header-action,.community-search-button,.chat-action,.chat-back,.detail-back) {
+  min-width:38px;min-height:38px;
+}
+/* Editorial rhythm: compact sections, quiet dividers, fewer nested containers. */
+#app .phone :is(.card,.community-post-card,.notification-row,.chat-row,.search-result,.settings-entry,.settings-group,.panel) {
+  box-shadow:none;
+}
+#app .phone :is(.settings-group,.settings-section,.community-post-card,.search-result,.notification-row,.chat-row) {
+  border-radius:0;
+}
+#app .phone :is(.community-post-card,.notification-row,.chat-row,.search-result,.settings-entry) {
+  border-left:0;border-right:0;
+  border-color:var(--editorial-hairline);
+}
+#app .phone :is(.settings-section,.community-topic-tabs,.community-feed-tabs,.profile-section-tabs,.profile-nav) {
+  gap:8px;
+}
+#app .phone :is(.settings-section,.settings-group) {
+  margin-top:14px;
+}
+#app .phone :is(.settings-group h3,.section-title,.community-section-title,.search-section-title) {
+  letter-spacing:-.02em;
+  font-weight:700;
+}
+#app .phone :is(.community-post-card,.notification-row,.chat-row,.search-result) {
+  padding-top:12px;
+  padding-bottom:12px;
+}
+#app .phone :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items,.cf-menu,.sheet,.panel) {
+  box-shadow:0 12px 34px rgba(18,22,30,.13);
+  border-color:var(--editorial-hairline);
+}
+#app .phone :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items) {
+  border-radius:14px;
+  padding:5px;
+}
+#app .phone :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items) button {
+  min-height:42px;
+  border-radius:9px;
+  padding-inline:11px;
+}
+/* Buttons and filters stay familiar, but lose pill-on-pill decoration. */
+#app .phone :is(.home-topic-tab,.community-feed-tabs button,.pills button,.chat-inbox-filter,.notification-filter,.sheet .seg button,.seg button) {
+  box-shadow:none;
+}
+#app .phone :is(.home-topic-tab,.community-feed-tabs button,.pills button) {
+  min-height:34px;
+  border-radius:8px;
+}
+#app .phone :is(.chat-inbox-filter,.notification-filter) {
+  min-height:32px;
+  border-radius:8px;
+  padding-inline:10px;
+}
+#app .phone :is(.field,.search,.chatsearch,.discovery-search) {
+  box-shadow:none;
+}
+#app .phone :is(.field,.search,.chatsearch,.discovery-search):focus-within {
+  box-shadow:none;
+}
+/* Keep media immersive; only simplify surrounding chrome and metadata. */
+#app .phone :is(.community-post-media,.post-media,.clip,.story-stage,.creative-editor,.camera-screen) {
+  box-shadow:none;
+}
+#app .phone :is(.community-post-copy,.post-caption,.clip-caption,.profile-bio,.search-result-copy) {
+  line-height:1.42;
+}
+#app .phone :is(.community-post-meta,.post-meta,.clip-meta,.search-result-meta,.notification-meta) {
+  color:var(--color-muted,#6b6f76);
+  font-size:12px;
+}
+#app .phone .nav:not(.nav-hidden) {
+  box-shadow:none;
+  border-radius:0;
+}
+#app .phone .nav:not(.nav-hidden) > button {
+  border-radius:9px;
+  background:transparent;
+}
+#app .phone .nav:not(.nav-hidden) > button.on {
+  box-shadow:none;
+}
+/* Sheets feel like native compact panels without changing their actions or contents. */
+#app .phone .sheet {
+  border-radius:18px 18px 0 0;
+}
+#app .phone :is(.sheet,.panel) .grab {
+  width:30px;height:4px;border-radius:4px;
+}
+#app .phone :is(.listbtn,.settings-entry,.comment-action-list button) {
+  min-height:44px;
+}
+#app .phone :is(button,a,[role="button"]):focus-visible {
+  outline-offset:2px;
+}
+@media (max-width:380px) {
+  #app .phone { --editorial-gutter:12px; }
+  #app .phone :is(.community-header-actions,.chat-actions) { gap:2px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  #app .phone * { scroll-behavior:auto!important; }
+}
