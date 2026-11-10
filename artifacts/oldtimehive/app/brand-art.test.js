@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
+import {inflateSync} from "node:zlib";
 
 test("the published opening artwork is committed as a valid JPEG",()=>{
   const image=readFileSync(new URL("../public/brand/oldtime-opening-red.jpeg",import.meta.url));
