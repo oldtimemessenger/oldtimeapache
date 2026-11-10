@@ -43,6 +43,8 @@ async function getRoom(db:Database,id:string,userId:string){
   const room=await roomRow(db,id);
   if(!room||room.status!=="live"||room.updated_at<now()-ROOM_TTL_MS)throw new ApiError(404,"This Open Mic room has ended or is unavailable.");
   if(!await visibleTo(db,room,userId))throw new ApiError(404,"This Open Mic room is unavailable.");
+  if(room.owner_id!==userId&&await db.prepare("SELECT 1 FROM open_mic_room_bans WHERE room_id=? AND user_id=?").bind(id,userId).first())
+    throw new ApiError(403,"The host removed you from this room.");
   return room;
 }
 async function listRooms(db:Database,userId:string){
