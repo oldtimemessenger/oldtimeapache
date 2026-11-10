@@ -6,6 +6,7 @@ import { createCloudflareTransport } from "./cloudflare-transport.js";
 const chatListeners = new Set();
 const notificationListeners = new Set();
 const callListeners = new Set();
+const openMicListeners = new Set();
 let transport = null;
 let transportToken = "";
 
@@ -25,6 +26,9 @@ function notifyCallListeners(signal) {
   for (const listener of callListeners) {
     try { Promise.resolve(listener(signal)).catch(() => {}); } catch {}
   }
+}
+function notifyOpenMicListeners(signal) {
+  for (const listener of openMicListeners) { try { Promise.resolve(listener(signal)).catch(() => {}); } catch {} }
 }
 
 function refreshLiveViews() {
@@ -54,6 +58,7 @@ function ensureConnected() {
   current.on("chat:changed", notifyChatListeners)
     .on("notifications:changed", notifyNotificationListeners)
     .on("call:signal", notifyCallListeners)
+    .on("open-mic:signal", notifyOpenMicListeners)
     .on("connect", refreshLiveViews);
   return current;
 }
@@ -74,6 +79,13 @@ export function subscribe(fn) {
   callListeners.add(fn);
   ensureConnected();
   return () => callListeners.delete(fn);
+}
+
+export function subscribeOpenMic(fn) {
+  openMicListeners.add(fn); ensureConnected(); return () => openMicListeners.delete(fn);
+}
+export function publishOpenMic(signal) {
+  return ensureConnected()?.sendOpenMicSignal(signal) || false;
 }
 
 export function publish(type, callId, to, payload = {}, conversationId = "") {
