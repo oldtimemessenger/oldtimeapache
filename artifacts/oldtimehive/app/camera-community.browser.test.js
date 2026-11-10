@@ -2244,7 +2244,7 @@ test(process.env.OLDTIME_STORY_REPLY_ONLY === "1"
     assert.equal(await page.locator('[data-testid="button-nav-profile"]').isVisible(), true);
     assert.equal(await page.locator('[data-testid="button-header-search"]').isVisible(), true, "Search opens from the Home header top-left");
     assert.equal(await page.locator('[data-testid="button-header-profile"]').count(), 0, "Home no longer duplicates Profile in the header");
-    const expectedNavBackground = "rgb(9, 10, 12)";
+    const expectedNavBackground = "rgba(7, 8, 12, 0.97)";
     assert.equal(await page.locator(".nav").evaluate(element => getComputedStyle(element).backgroundColor), expectedNavBackground,
       "bottom navigation keeps its restored black surface across interface themes");
     const navItemColors = await page.locator(".nav").evaluate(element => ({
