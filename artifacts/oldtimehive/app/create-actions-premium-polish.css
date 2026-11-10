@@ -1,0 +1,112 @@
+/* Create Studio and contextual actions — obsidian control surfaces.
+   Keep capture preview, editor canvas, image pixels and media rendering untouched. */
+.cs-studio {
+  --ws-bg:#090a0e;
+  --ws-card:#11131a;
+  --ws-ink:#f5f6fa;
+  --ws-gray:#a0a6b2;
+  --ws-soft:#20232c;
+  --ws-line:rgba(255,255,255,.11);
+  --ws-blue:#dce5ff;
+  --ws-blue-soft:#252d40;
+  --ws-burg:#d8a5b3;
+  --ws-burg-soft:#35232b;
+}
+.cs-studio .cs-ws,
+.cs-studio .cs-ws > *,
+.cs-studio .cs-ws-bar,
+.cs-studio .cs-tl-labels,
+.cs-studio .cs-tl-ruler,
+.cs-studio .cs-tools {
+  background-color:var(--ws-bg)!important;
+  color:var(--ws-ink);
+  border-color:var(--ws-line)!important;
+}
+.cs-studio .cs-ws { border-top-color:var(--ws-line); }
+.cs-studio .cs-ws-icon { color:var(--ws-ink); }
+.cs-studio .cs-ws-icon:hover,
+.cs-studio .cs-ws-icon[aria-pressed="true"] { background:var(--ws-soft); }
+.cs-studio :is(.cs-ws-time,.cs-tl-labels span,.cs-tl-ruler span,.cs-tool small,.cs-filter-name) {
+  color:var(--ws-gray);
+}
+.cs-studio .cs-tl-lane { background:#151821; }
+.cs-studio .cs-tl-empty { color:#777f8e; }
+.cs-studio .cs-tl-block.is-media { background-color:#29364d; border-color:#627da9; color:#f5f6fa; }
+.cs-studio .cs-tl-block.is-text { background:var(--ws-burg-soft); border-color:#78515f; color:#f4dce3; }
+.cs-studio .cs-tl-block.is-overlay { background:#292d37; border-color:#555d6b; color:#edf0f6; }
+.cs-studio .cs-tl-block.is-audio { background:repeating-linear-gradient(90deg,#536b91 0 2px,transparent 2px 5px),#202a3b; border-color:#60799f; color:#e5edff; }
+.cs-studio .cs-tl-block.is-selected { border-color:#f5f6fa; box-shadow:0 0 0 1px #f5f6fa; }
+.cs-studio .cs-tl-head,.cs-studio .cs-tl-head::before { background:#f0b9c8; }
+.cs-studio .cs-tool { color:var(--ws-gray); }
+.cs-studio .cs-tool[aria-pressed="true"] { color:var(--ws-ink); background:var(--ws-soft); }
+.cs-studio :is(.cs-sheet,.cs-details,.ce-panel,.ce-media-panel) {
+  color:var(--ws-ink);
+  color-scheme:dark;
+  background:var(--ws-card)!important;
+  border-color:var(--ws-line)!important;
+}
+.cs-studio :is(.cs-sheet,.cs-details,.ce-panel,.ce-media-panel) :is(h1,h2,h3,h4,b,strong,label) { color:var(--ws-ink); }
+.cs-studio :is(.cs-sheet,.cs-details,.ce-panel,.ce-media-panel) :is(p,small,.hint,.muted) { color:var(--ws-gray); }
+.cs-studio :is(.cs-action,.cs-text-btn,.cs-seg,.cs-seg button,.cs-reset) {
+  border-color:var(--ws-line);
+  color:var(--ws-ink);
+}
+.cs-studio :is(.cs-action,.cs-text-btn) { background:var(--ws-panel,var(--ws-panel-raised,#1b1f29)); }
+.cs-studio .cs-seg { background:#20232c; }
+.cs-studio .cs-seg button[aria-checked="true"] { background:#f5f6fa; color:#08090c; box-shadow:none; }
+.cs-studio .cs-text-btn { color:#f5f6fa; background:#20232c; }
+.cs-studio .cs-slider input[type=range]::-webkit-slider-runnable-track { background:linear-gradient(90deg,#343946 var(--a,0%),#dce5ff var(--a,0%),#dce5ff var(--b,0%),#343946 var(--b,0%)); }
+.cs-studio .cs-slider input[type=range]::-moz-range-track { background:linear-gradient(90deg,#343946 var(--a,0%),#dce5ff var(--a,0%),#dce5ff var(--b,0%),#343946 var(--b,0%)); }
+.cs-studio .cs-slider input[type=range]::-webkit-slider-thumb { background:#f5f6fa; border-color:#aebfe4; }
+.cs-studio .cs-slider input[type=range]::-moz-range-thumb { background:#f5f6fa; border-color:#aebfe4; }
+.cs-studio .cs-filter-name { color:var(--ws-gray); }
+.cs-studio .cs-filter[aria-checked="true"] .cs-filter-name { color:var(--ws-ink); }
+.cs-studio .cs-filter[aria-checked="true"] .cs-filter-img { border-color:#f5f6fa; }
+.cs-studio .cs-studio-publish,
+.cs-studio .cs-details .cs-publish {
+  background:#f5f6fa!important;
+  color:#08090c!important;
+}
+.cs-studio .cs-pop,
+.cs-studio .ce-sound-picker {
+  background:#11131a!important;
+  border-color:var(--ws-line)!important;
+  color:var(--ws-ink);
+}
+.cs-studio :is(.cs-pop,.ce-sound-picker) :is(button,.ce-field,.ce-sound-hint) { color:var(--ws-ink); }
+.cs-studio .cs-row-btn:active,
+.cs-studio .cs-row-btn[aria-pressed="true"] { background:#252a35; }
+.cs-studio .ce-sound-picker button { background:#1b1f29; border-color:var(--ws-line); color:var(--ws-ink); }
+.cs-studio .ce-sound-tabs button[aria-selected="true"] { background:#f5f6fa!important; color:#08090c!important; }
+
+/* Post, profile and edit menus: compact dark contextual surfaces with clear action hierarchy. */
+#app :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items) {
+  color:var(--ot-ink,#f5f6fa);
+  color-scheme:dark;
+  background:var(--ot-panel,#11131a)!important;
+  border:1px solid var(--ot-hairline,rgba(255,255,255,.11))!important;
+  box-shadow:0 18px 52px rgba(0,0,0,.48)!important;
+}
+#app :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items) button {
+  min-height:46px;
+  color:var(--ot-ink,#f5f6fa);
+  background:transparent;
+}
+#app :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items) button:hover,
+#app :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items) button:focus-visible {
+  background:var(--ot-panel-raised,#171a22)!important;
+  color:var(--ot-ink,#f5f6fa);
+}
+#app :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items) button.is-destructive { color:#ff9b9b; }
+#app :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items) button.is-destructive:hover { background:rgba(180,35,24,.16)!important; }
+#app :is(.post-actions-menu,.profile-post-menu,.post-edit-menu)[open] > summary {
+  color:var(--ot-ink,#f5f6fa);
+  background:var(--ot-panel-raised,#171a22);
+  border-color:var(--ot-hairline,rgba(255,255,255,.11));
+}
+#app :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items) [role="separator"] {
+  background:var(--ot-hairline,rgba(255,255,255,.11));
+}
+@media (prefers-reduced-motion:reduce) {
+  .cs-studio *, #app :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items) button { transition:none!important; }
+}
