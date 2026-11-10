@@ -25,3 +25,10 @@ CREATE TABLE IF NOT EXISTS open_mic_participants (
 );
 CREATE INDEX IF NOT EXISTS open_mic_participants_presence_idx
   ON open_mic_participants(room_id, last_seen_at DESC);
+
+CREATE TABLE IF NOT EXISTS open_mic_room_bans (
+  room_id TEXT NOT NULL REFERENCES open_mic_rooms(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at INTEGER NOT NULL,
+  PRIMARY KEY (room_id, user_id)
+);
