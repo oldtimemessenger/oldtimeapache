@@ -1,4 +1,5 @@
 import "./sports-mode.css";
+import "./sports-mode-premium.css";
 import "./sports-world-map-premium.css";
 import { sports, ACTIVITIES } from "./sports-engine.js";
 import { sportsSocial } from "./sports-social.js";
