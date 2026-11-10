@@ -1,0 +1,31 @@
+:root {
+  --color-primary: #1456d9;
+  --accent: #1456d9;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-heading: var(--font);
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: #08090c;
+  font-family: var(--font);
+}
+
+.story-preview {
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: #08090c;
+}
+
+#storyview.storyview {
+  position: relative;
+  inset: auto;
+  display: block;
+  width: 100%;
+  height: 100%;
+}

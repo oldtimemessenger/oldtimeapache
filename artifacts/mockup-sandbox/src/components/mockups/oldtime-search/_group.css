@@ -1,0 +1,157 @@
+.oldtime-search-preview {
+  min-height: 100vh;
+  background: #fff;
+  color: #17191c;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.oldtime-search-preview *,
+.oldtime-search-preview *::before,
+.oldtime-search-preview *::after {
+  box-sizing: border-box;
+}
+
+.oldtime-search-preview button,
+.oldtime-search-preview input {
+  font: inherit;
+}
+
+.oldtime-search-preview .search-app-header {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 14px;
+  border-bottom: 1px solid #eceef2;
+}
+
+.oldtime-search-preview .search-app-header h1 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.oldtime-search-preview .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.oldtime-search-preview .search-layout-toggle {
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid #e2e5eb;
+  border-radius: 999px;
+  background: #f5f6f8;
+  color: #26303e;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.oldtime-search-preview .discovery-search-toggle {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #17191c;
+}
+
+.oldtime-search-preview .discovery-search-toggle svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.oldtime-search-preview .search-hub-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px;
+  margin: 8px 14px 10px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #f2f3f5;
+}
+
+.oldtime-search-preview .search-hub-tabs button {
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #747982;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.oldtime-search-preview .search-hub-tabs button[aria-selected="true"] {
+  background: #fff;
+  color: #17191c;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+}
+
+.oldtime-search-preview .topic-row {
+  display: flex;
+  min-width: 0;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 0 18px;
+  border-bottom: 1px solid #e9ebef;
+  scrollbar-width: none;
+}
+
+.oldtime-search-preview .topic-row button {
+  position: relative;
+  flex: 0 0 auto;
+  min-height: 48px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #667080;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.oldtime-search-preview .topic-row button:first-child {
+  color: #14171c;
+}
+
+.oldtime-search-preview .topic-row button:first-child::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  border-radius: 2px;
+  background: #1456d9;
+  content: "";
+}
+
+.oldtime-search-preview .empty-state {
+  padding: 28px 18px;
+  color: #737985;
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.oldtime-search-preview .bottom-nav {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 24px;
+  padding: 10px 6px max(10px, env(safe-area-inset-bottom));
+  border-top: 1px solid #eceef2;
+  background: #fff;
+  color: #202329;
+}
+
+.oldtime-search-preview .bottom-nav span {
+  font-size: 11px;
+}

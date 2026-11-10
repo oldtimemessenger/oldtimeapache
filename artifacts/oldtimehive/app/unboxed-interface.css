@@ -1,0 +1,1022 @@
+/*
+ * Final interface contract: no filled backplates behind ordinary icons or
+ * neutral controls. Search fields use a soft capsule without a border. Keep identity/media pixels, colored
+ * primary actions, selection indicators and functional slider/switch tracks.
+ * This sheet loads last; !important intentionally wins older feature palettes.
+ */
+
+/* Include sheets mounted outside #app as well as ordinary routed screens. */
+:is(#app,.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet,.rn-panel) :is(
+  .icon,.row-icon,.interest-feed-mark,.community-story-find,
+  .community-header-action,.community-header-profile,.community-note-close,
+  .community-note-image-remove,.quotes-close,.drawer-close,
+  .settings-back,.settings-entry-icon,.profile-editor-emoji,
+  .profile-action-close,.ap-icon,.ct-icon,.ap-post-back,.ap-post-action,
+  .comment-header button,.comment-close,.comment-action-header button,
+  .chat-head-icon,.chat-back,.detail-back,.chat-action,.chat-compose-chip button,
+  .discovery-back,.discovery-empty-mark,.discovery-people-icon,
+  .blast-icon-btn,.blast-back,.blast-search-submit,.blast-notes-icon,.blast-notes-share,
+  .bvn-icon-button,.bvn-back-button,.bvn-feed-search button,
+  .ap-close,.ap-mini,.ss-close,.srp-close,.srp-actic,.rn-icon,
+  .pp-header [data-close],.pp-map-header [data-map-close],
+  .community-announcement-category-icon,.notification-activity-menu>summary
+) {
+  background:transparent!important;
+  border-color:transparent!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+
+/* Search pills are styled below; remaining form fields keep their hairline border. */
+:is(#app,.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet) :is(
+  .search,.exp-search,.srp-search,
+  .emoji-search-row,.chat-emoji-search-row,.blast-community-search,
+  .field,.ap-field,.ct-field,.blast-input,.comment-search-wrap input,
+  .notification-activity-options select,
+  .profile-note-panel textarea,.post-edit-field textarea,
+  .chat-compose-mode,.chat-compose-chip,.chat-composer,.composer,.msgdock,.pinbar,.replybar,
+  .comment-composer-pill
+) {
+  background:#fff!important;
+  box-shadow:none!important;
+}
+
+/* Neutral chips stay unboxed; selected rows use a flat pale-blue fill and blue indicator. */
+#app :is(
+  .profile-interest-chip,.people-match-tags span,.ap-new,.hc-pill,
+  .notification-filter,.chat-inbox-filter,
+  .chat-option,.chat-folder-options button,.drawer-link,
+  .ap-tabs button,.ap-seg button,.ct-status-chip,.ct-range,.ct-kind,
+  .rn-reactions button,.emoji-grid button,.emoji-tile>.emoji,.emoji-categories button,
+  .post-edit-location-row>.post-edit-place,
+  .post-edit-cancel,.profile-grid-more,.profile-action-item
+) {
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#app :is(.profile-interest-option,.seg button,.hc-chip,.guide-chip):not(.on):not(.is-active):not(.selected):not([aria-pressed=true]):not([aria-selected=true]) {
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#app :is(.chat-option[aria-checked=true],.chat-folder-options button.active) {
+  border:0!important;
+  border-bottom:0!important;
+  border-radius:999px!important;
+  background:#e8f1ff!important;
+  color:#17191c!important;
+  font-weight:500;
+}
+#app .chat-option[aria-checked=true] .chat-option-radio {
+  display:grid;
+  place-items:center;
+  border:0;
+  background:var(--color-primary,#1456d9);
+}
+#app .chat-option[aria-checked=true] .chat-option-radio::after {
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:#fff;
+  content:"";
+}
+#app .chat-option[aria-checked=true]:focus-visible { outline:0; outline-offset:0; }
+#app .chat-compose-panel .chat-compose-mode[aria-pressed="true"] { color:#17191c!important; background:#e8f1ff!important; border-color:transparent!important; }
+#app :is(.ap-tabs button,.ap-seg button,.rn-reactions button):is(.on,.active,[aria-pressed=true]) {
+  color:var(--text)!important;
+  border-bottom:2px solid var(--color-primary,#1456d9);
+}
+:is(#app,.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet) :is(.blast-search-submit,.bvn-feed-search button) {
+  color:var(--text,#17191c)!important;
+}
+
+/* Remove filled gray grouping cards without flattening user-created content. */
+#app :is(
+  .ap-card,.ap-stat,.ap-guide,.ct-card,.ct-stats>div,.status-counts>div,
+  .ap-post-summary .ap-stat,.community-post-card,.community-trending-section,
+  .blast-x-rail-card,.blast-x-rail-note,.blast-compose-prompt,
+  .discovery-state,.places-state,.people-match-empty,.exp-empty,
+  .notification-load-status,.notification-row,.settings-transfer-row,
+  .comment-action-preview,.places-card-no-preview,.places-map-backdrop
+) {
+  background:#fff!important;
+  box-shadow:none!important;
+}
+:is(#app,.saved-social-panel,.share-recipient-panel) :is(.ss-body,.ss-foot,.srp-preview) {
+  background:#fff!important;
+  box-shadow:none!important;
+}
+#app :is(.ap-tools-art,.community-post-media,.community-post-media-item) {
+  background:transparent!important;
+}
+#app :is(.community-post-media,.community-post-media-item):has(video) {
+  background:#000!important;
+}
+#app :is(.phone.light,.stories-phone,.stories-phone .screen) {
+  background:#fff!important;
+}
+
+/* White secondary actions and disabled states retain readable labels. */
+:is(#app,.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet) :is(
+  .account-settings-screen .btn.ghost,.auth.ot-auth .btn.ghost,
+  .profile-screen #logout,
+  .profile-note-panel .btn.ghost,.ap-ghost,.ap-btn.ghost,.ct-btn.ghost,
+  .srp-aud button:not(.on):not([aria-pressed=true]),
+  .profile-editor-save-cover:disabled,.settings-save-bar>button:disabled,
+  .community-note-compose-footer button:disabled,.srp-send:disabled
+) {
+  background:#fff!important;
+  color:var(--text,#17191c)!important;
+  border:1px solid var(--line,rgba(22,24,35,.12))!important;
+  box-shadow:none!important;
+}
+#app .conversation-screen .bubble-msg.theirs {
+  background:#242428!important;
+  color:#f5f5f6!important;
+  border:1px solid #38383e!important;
+  box-shadow:none;
+}
+#app .conversation-screen :is(.datesep,.chat-archive-notice,.chat-archive-draft) {
+  background:#1c1c20!important;
+}
+#app .nav button.on {
+  background:transparent!important;
+}
+#app .nav:not(.lightnav) button.on {
+  color:#fff;
+}
+#app .nav.lightnav button.on {
+  color:#17191c;
+}
+.toast {
+  background:#fff!important;
+  color:#17191c!important;
+  border:1px solid rgba(22,24,35,.12);
+}
+
+/* Inbox details: an original message-plus mark, a soft search capsule, and clear selection. */
+#app .chat-list-topline {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+#app .chat-list-topline .chat-title {
+  min-width:0;
+  max-width:none;
+  flex:1 1 auto;
+  margin:0;
+  text-align:left;
+  font-size:18px;
+}
+#app .chat-list-topline .chat-head-actions {
+  position:static;
+  flex:0 0 auto;
+  margin-left:auto;
+  gap:4px;
+  transform:none;
+}
+#app .discovery-search-wrap {
+  border:0!important;
+  border-radius:999px!important;
+  background:#f1f2f4!important;
+  box-shadow:none!important;
+}
+#app .discovery-search {
+  border:0!important;
+  outline:0;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#app .discovery-search::placeholder { color:#777d85; opacity:1; }
+#app .discovery-search-wrap:focus-within {
+  border-color:transparent!important;
+  outline:2px solid rgba(20,86,217,.26);
+  outline-offset:2px;
+}
+
+/* Active Search uses one capsule for the input and its close action. */
+#app .search-screen .search-header-field {
+  display:flex;
+  flex:1 1 auto;
+  min-width:0;
+}
+#app .search-screen .search-header-control {
+  display:flex;
+  width:100%;
+  min-width:0;
+  min-height:44px;
+  align-items:center;
+  padding:0;
+  border:0;
+  border-radius:999px;
+  background:#f1f2f4;
+  box-shadow:none;
+  color:#68717d;
+}
+#app .search-screen .search-header-control:focus-within {
+  background:#f1f2f4;
+  box-shadow:inset 0 0 0 1px #d7dce3;
+}
+#app .search-screen .search-header-control .xe-bar {
+  display:flex;
+  flex:1 1 auto;
+  width:auto;
+  min-width:0;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#app .search-screen .search-header-control :is(.xe-search,.discovery-search-wrap,.search-explore-search) {
+  display:flex;
+  flex:1 1 auto;
+  width:auto;
+  min-width:0;
+  min-height:44px;
+  align-items:center;
+  gap:9px;
+  margin:0!important;
+  padding:0 0 0 14px!important;
+  border:0!important;
+  border-radius:999px 0 0 999px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#737b86;
+}
+#app .search-screen .search-header-control :is(.xe-search,.discovery-search-wrap,.search-explore-search) > svg {
+  flex:0 0 18px;
+  width:18px;
+  height:18px;
+  color:#737b86;
+}
+#app .search-screen .search-header-control input[type="search"] {
+  flex:1 1 auto;
+  width:100%;
+  min-width:0;
+  min-height:44px;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  outline:0!important;
+  border-radius:0!important;
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#17191c;
+  caret-color:#17191c;
+  font:400 16px/1.3 var(--font,system-ui);
+}
+#app .search-screen .search-header-control input[type="search"]::placeholder {
+  color:#777d85;
+  opacity:1;
+}
+#app .search-screen .search-header-control input[type="search"]::-webkit-search-cancel-button,
+#app .search-screen .search-header-control input[type="search"]::-webkit-search-decoration {
+  display:none;
+  appearance:none;
+  -webkit-appearance:none;
+}
+#app .search-screen .search-header-close {
+  display:grid;
+  flex:0 0 44px;
+  width:44px;
+  height:44px;
+  place-items:center;
+  padding:0;
+  border:0!important;
+  border-radius:999px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#68717d;
+}
+#app .search-screen .search-header-close svg {
+  width:18px;
+  height:18px;
+}
+#app .search-screen .search-header-close:focus-visible {
+  outline:2px solid #929aa5;
+  outline-offset:-3px;
+}
+#app .chat-inbox-empty {
+  min-height:min(50dvh,440px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  padding:32px 18px 24px;
+  color:#17191c;
+  text-align:center;
+}
+#app .chat-inbox-empty-icon { display:grid; place-items:center; color:#5e6874; }
+#app .chat-inbox-empty-icon .navic { width:48px; height:48px; stroke-width:1.55; }
+#app .chat-inbox-empty p { margin:0; font-size:15px; font-weight:600; line-height:1.35; }
+#app .chat-inbox-empty-cta {
+  min-height:38px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:0 15px;
+  border:0;
+  border-radius:999px;
+  color:#fff;
+  background:var(--color-primary,#1456d9);
+  font:inherit;
+  font-size:13px;
+  font-weight:650;
+  cursor:pointer;
+}
+#app .chat-inbox-empty-cta .navic { width:17px; height:17px; }
+#app .chat-inbox-empty-cta:hover { background:#1049bd; }
+#app .chat-inbox-empty-cta:focus-visible { outline:2px solid #17191c; outline-offset:3px; }
+@media (max-width:370px) {
+  #app .chat-list-topline { gap:5px; }
+  #app .chat-list-topline .chat-head-actions { gap:1px; }
+  #app .chat-head-icon { width:32px; min-width:32px; }
+}
+
+/* Chat thread palette: black canvas, dark incoming bubbles, and Oldtime blue. */
+#app .conversation-screen {
+  --thread-accent:#1456d9;
+  --thread-blue-glass:linear-gradient(145deg,rgba(47,122,255,.92),rgba(20,86,217,.72));
+  --thread-blue-glass-border:rgba(153,195,255,.46);
+  color-scheme:dark;
+  color:#f5f5f6!important;
+  background:#000!important;
+}
+#app .conversation-screen .chat-header,
+#app .conversation-screen .conversation-messages {
+  color:#f5f5f6!important;
+  background:#000!important;
+}
+#app .conversation-screen .chat-header {
+  border-bottom:1px solid rgba(84,136,235,.2)!important;
+  background:linear-gradient(180deg,rgba(6,12,28,.88),rgba(0,0,0,.76))!important;
+  -webkit-backdrop-filter:blur(16px) saturate(135%)!important;
+  backdrop-filter:blur(16px) saturate(135%)!important;
+}
+#app .conversation-screen .chat-back,
+#app .conversation-screen .chat-action {
+  color:#1456d9!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#app .conversation-screen .chat-identity-copy b { color:#f5f5f6!important; }
+#app .conversation-screen .chat-subtitle { color:#a1a1a8!important; }
+#app .conversation-screen .chat-identity-copy .verified {
+  border:1px solid var(--thread-blue-glass-border)!important;
+  background:var(--thread-blue-glass)!important;
+  -webkit-backdrop-filter:blur(8px) saturate(135%)!important;
+  backdrop-filter:blur(8px) saturate(135%)!important;
+}
+#app .conversation-screen .conversation-messages { overscroll-behavior:contain; }
+#app .conversation-screen .datesep {
+  border-color:#34343a!important;
+  background:#202025!important;
+  color:#b7b7bd!important;
+}
+#app .conversation-screen .chat-group-time,
+#app .conversation-screen .message-time,
+#app .conversation-screen .message-status,
+#app .conversation-screen .meta-line {
+  color:#9b9ba2!important;
+}
+#app .conversation-screen .chat-archive-notice,
+#app .conversation-screen .chat-archive-draft {
+  border-color:#36363c!important;
+  background:#1c1c20!important;
+  color:#c8c8ce!important;
+}
+#app .conversation-screen .chat-archive-notice b,
+#app .conversation-screen .chat-archive-draft b { color:#f5f5f6!important; }
+#app .conversation-screen .chat-archive-new {
+  border-color:#44444b!important;
+  background:#29292e!important;
+  color:#f5f5f6!important;
+}
+#app .conversation-screen .bubble-msg.mine {
+  background:var(--thread-blue-glass)!important;
+  color:#fff!important;
+  border:1px solid var(--thread-blue-glass-border)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(145%)!important;
+  backdrop-filter:blur(16px) saturate(145%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 2px 9px rgba(5,43,127,.18)!important;
+}
+#app .conversation-screen .bubble-msg.theirs {
+  background:rgba(37,39,47,.78)!important;
+  color:#f5f5f6!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  -webkit-backdrop-filter:blur(14px) saturate(125%)!important;
+  backdrop-filter:blur(14px) saturate(125%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+#app .conversation-screen .bubble-msg :is(a,a:visited) {
+  color:inherit!important;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+#app .conversation-screen .bubble-msg.mine .quote { border-color:rgba(255,255,255,.56)!important; color:rgba(255,255,255,.9)!important; }
+#app .conversation-screen .bubble-msg.theirs .quote { border-color:#77777f!important; color:#d1d1d5!important; }
+#app .conversation-screen .bubble-msg :is(.cap,.caption,small) { color:inherit; }
+ #app .conversation-screen .bubble-msg.mine .vn-msg :is(button,[data-vspeed]),
+#app .conversation-screen .bubble-msg.mine .vn-msg > span { color:#fff!important; }
+#app .conversation-screen .bubble-msg.mine .vn-msg .vn-wave::before { background:rgba(255,255,255,.3)!important; }
+#app .conversation-screen .bubble-msg.mine .vn-msg .vn-wave::after { background:#fff!important; }
+#app .conversation-screen .bubble-msg.mine .vn-msg .vn-wave i { background:rgba(255,255,255,.82)!important; }
+#app .conversation-screen .bubble-msg.theirs .vn-msg button,
+#app .conversation-screen .bubble-msg.theirs .vn-msg > span,
+#app .conversation-screen .bubble-msg.theirs .vn-msg [data-vspeed] { color:#f5f5f6!important; }
+#app .conversation-screen .bubble-msg.theirs .vn-msg .vn-wave::before { background:rgba(255,255,255,.18)!important; }
+#app .conversation-screen .bubble-msg.theirs .vn-msg .vn-wave::after { background:#f5f5f6!important; }
+#app .conversation-screen .bubble-msg.theirs .vn-msg .vn-wave i { background:#a5a5ad!important; }
+#app .conversation-screen .bubble-msg.mine :is(.message-time,.message-status) { color:rgba(255,255,255,.78)!important; }
+#app .conversation-screen .bubble-msg.theirs :is(.message-time,.message-status) { color:#a8a8af!important; }
+#app .conversation-screen .reaction-chip {
+  border-color:#424249!important;
+  background:#29292e!important;
+  color:#f1f1f3!important;
+}
+#app .conversation-screen .reaction-chip span { color:#c3c3c9!important; }
+#app .conversation-screen .reaction-chip.mine {
+  border-color:rgba(132,180,255,.42)!important;
+  background:rgba(20,86,217,.2)!important;
+  color:#fff!important;
+  -webkit-backdrop-filter:blur(10px) saturate(135%)!important;
+  backdrop-filter:blur(10px) saturate(135%)!important;
+}
+#app .conversation-screen .message-file {
+  border-color:#4a4a51!important;
+  background:#303036!important;
+  color:#f5f5f6!important;
+}
+#app .conversation-screen .bubble-msg.theirs .message-file { background:#303036!important; }
+#app .conversation-screen .chat-location-card {
+  border-color:#4a4a51!important;
+  background:#303036!important;
+  color:#f5f5f6!important;
+}
+#app .conversation-screen .chat-location-avatar,
+#app .conversation-screen .chat-location-icon {
+  background:#414148!important;
+  color:#fff!important;
+}
+#app .conversation-screen .chat-location-copy small,
+#app .conversation-screen .chat-location-external { color:#c0c0c6!important; }
+#app .conversation-screen .chat-location-map-pin {
+  background:rgba(20,86,217,.82)!important;
+  -webkit-backdrop-filter:blur(4px)!important;
+  backdrop-filter:blur(4px)!important;
+}
+#app .conversation-screen .chat-location-map-pin::after {
+  border-color:rgba(20,86,217,.58)!important;
+  background:rgba(20,86,217,.16)!important;
+}
+#app .conversation-screen .composer {
+  border-color:rgba(135,157,204,.25)!important;
+  background:rgba(16,18,25,.82)!important;
+  color:#f5f5f6!important;
+  -webkit-backdrop-filter:blur(18px) saturate(135%)!important;
+  backdrop-filter:blur(18px) saturate(135%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09)!important;
+}
+#app .conversation-screen .chat-composer button { color:#f1f1f3!important; }
+#app .conversation-screen .chat-composer #chat-add,
+#app .conversation-screen .chat-composer button[type=submit] {
+  color:#fff!important;
+  border:1px solid var(--thread-blue-glass-border)!important;
+  border-radius:50%!important;
+  background:var(--thread-blue-glass)!important;
+  -webkit-backdrop-filter:blur(14px) saturate(145%)!important;
+  backdrop-filter:blur(14px) saturate(145%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.26),0 2px 8px rgba(5,43,127,.2)!important;
+}
+#app .conversation-screen .chat-composer #mic { color:#1456d9!important; }
+#app .conversation-screen .chat-composer textarea {
+  color:#f5f5f6!important;
+  background:transparent!important;
+}
+#app .conversation-screen .chat-composer textarea::placeholder { color:#a4a4ab!important; }
+#app .conversation-screen .chat-compose-tools {
+  border-color:#3a3a41!important;
+  background:#202025!important;
+  box-shadow:none!important;
+}
+#app .conversation-screen .chat-compose-tools button {
+  border-color:#414148!important;
+  background:#2b2b31!important;
+  color:#f5f5f6!important;
+}
+#app .conversation-screen .chat-compose-tools button .navic { color:#1456d9!important; }
+#app .conversation-screen .replybar,
+#app .conversation-screen .pinbar { color:#c6c6cc!important; }
+#app .conversation-screen .replybar button {
+  background:#303036!important;
+  color:#f5f5f6!important;
+}
+#app .conversation-screen :is(button,a,textarea):focus-visible {
+  outline-color:#1456d9!important;
+}
+#app .conversation-screen .chat-empty-intro { color:#f5f5f6!important; }
+#app .conversation-screen .chat-empty-avatar,
+#app .conversation-screen .chat-empty-avatar > .chat-avatar-initial {
+  background:#242428!important;
+  color:#f5f5f6!important;
+}
+#app .conversation-screen .chat-empty-name { color:#f5f5f6!important; }
+#app .conversation-screen .chat-empty-handle,
+#app .conversation-screen .chat-empty-date,
+#app .conversation-screen .chat-empty-greeting { color:#a4a4ab!important; }
+#app .conversation-screen .chat-empty-follow {
+  border:1px solid var(--thread-blue-glass-border)!important;
+  background:var(--thread-blue-glass)!important;
+  -webkit-backdrop-filter:blur(14px) saturate(145%)!important;
+  backdrop-filter:blur(14px) saturate(145%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2)!important;
+}
+#app .conversation-screen .chat-empty-follow.following {
+  background:#303036!important;
+  color:#f1f1f3!important;
+}
+#app .conversation-screen .chat-hello-sticker {
+  background:#28282d!important;
+  color:#f5f5f6!important;
+}
+/* Location requests keep one compact card, not a card nested in a message bubble. */
+#app .conversation-screen .bubble-msg.location-request-message {
+  width:fit-content!important;
+  max-width:100%!important;
+  padding:0!important;
+  overflow:visible!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+#app .conversation-screen .bubble-msg.location-request-message .chat-location-message {
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  max-width:100%!important;
+}
+#app .conversation-screen .bubble-msg.location-request-message .chat-location-request-card {
+  width:fit-content!important;
+  max-width:min(310px,calc(100vw - 102px))!important;
+  padding:10px 12px!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  border-radius:18px!important;
+  background:rgba(37,39,47,.82)!important;
+  color:#f5f6fa!important;
+  -webkit-backdrop-filter:blur(14px) saturate(130%)!important;
+  backdrop-filter:blur(14px) saturate(130%)!important;
+}
+#app .conversation-screen .bubble-msg.location-request-message .chat-location-avatar {
+  width:36px!important;
+  height:36px!important;
+  flex:0 0 36px!important;
+  background:#2b2d34!important;
+  color:#f5f6fa!important;
+}
+#app .conversation-screen .bubble-msg.location-request-message .chat-location-copy {
+  min-width:0!important;
+  color:#f5f6fa!important;
+}
+#app .conversation-screen .bubble-msg.location-request-message .chat-location-copy b {
+  color:#f5f6fa!important;
+  font-size:13px!important;
+  line-height:1.3!important;
+}
+#app .conversation-screen .bubble-msg.location-request-message .chat-location-copy small {
+  color:#b2b4bc!important;
+  font-size:11px!important;
+}
+/* Photos, videos and shared maps stand on their own; don't wrap them in another bubble. */
+#app .conversation-screen .bubble-msg.media-card-message {
+  width:fit-content!important;
+  max-width:100%!important;
+  padding:0!important;
+  overflow:visible!important;
+  border:0!important;
+  border-radius:14px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+#app .conversation-screen .bubble-msg.media-card-message .message-media {
+  margin:0!important;
+  border:1px solid rgba(151,185,237,.22)!important;
+  border-radius:14px!important;
+  background:#10131b!important;
+}
+#app .conversation-screen .bubble-msg.media-card-message .message-body > div:not(.message-media) {
+  margin-top:7px;
+  color:#f0f1f5!important;
+}
+#app .conversation-screen .bubble-msg.media-card-message .chat-location-message {
+  display:block!important;
+  max-width:100%!important;
+}
+#app .conversation-screen .bubble-msg.media-card-message .chat-location-card {
+  width:min(286px,100%)!important;
+  max-width:100%!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border:1px solid rgba(151,185,237,.24)!important;
+  border-radius:14px!important;
+  background:rgba(12,16,24,.78)!important;
+  box-shadow:none!important;
+}
+#app .conversation-screen .bubble-msg.media-card-message .chat-location-map-link {
+  display:block!important;
+  width:100%!important;
+  padding:0!important;
+  border-radius:13px 13px 0 0!important;
+  background:transparent!important;
+  color:#f5f6fa!important;
+  text-align:left!important;
+}
+#app .conversation-screen .bubble-msg.media-card-message .chat-location-map-canvas {
+  height:78px!important;
+  background:#141a26!important;
+}
+#app .conversation-screen .bubble-msg.media-card-message .chat-location-card-footer {
+  display:flex!important;
+  min-height:40px!important;
+  align-items:center!important;
+  gap:9px!important;
+  padding:6px 10px!important;
+  border-top:1px solid rgba(255,255,255,.1)!important;
+  background:rgba(18,22,31,.84)!important;
+}
+#app .conversation-screen .bubble-msg.media-card-message .chat-location-place-icon {
+  display:grid!important;
+  width:18px!important;
+  height:22px!important;
+  flex:0 0 18px!important;
+  place-items:center!important;
+  color:#c7d2ec!important;
+}
+#app .conversation-screen .bubble-msg.media-card-message .chat-location-place-icon svg {
+  width:18px!important;
+  height:18px!important;
+}
+#app .conversation-screen .bubble-msg.media-card-message .chat-location-copy {
+  flex:1 1 auto!important;
+  min-width:0!important;
+  color:#f5f6fa!important;
+}
+#app .conversation-screen .bubble-msg.media-card-message .chat-location-copy b {
+  font-size:13px!important;
+  font-weight:600!important;
+}
+#app .conversation-screen .bubble-msg.media-card-message .chat-location-chevron {
+  color:#aeb6c9!important;
+  font-size:22px!important;
+  line-height:1!important;
+}
+#app .conversation-screen .bubble-msg.media-card-message .chat-location-map-credit {
+  padding:3px 7px 5px!important;
+  color:#a4a8b2!important;
+  font-size:7px!important;
+}
+#app .conversation-screen .message-row.media-message-row {
+  display:grid!important;
+  width:100%!important;
+  max-width:100%!important;
+  grid-template-columns:36px minmax(0,1fr)!important;
+  align-items:end!important;
+  gap:7px!important;
+  margin:8px 0 10px!important;
+}
+#app .conversation-screen .message-row.media-message-row.mine {
+  grid-template-columns:minmax(0,1fr)!important;
+}
+#app .conversation-screen .media-message-avatar {
+  grid-column:1!important;
+  align-self:end!important;
+  width:36px!important;
+  height:36px!important;
+  margin-bottom:17px!important;
+}
+#app .conversation-screen .media-message-avatar .chat-location-avatar {
+  width:36px!important;
+  height:36px!important;
+  flex:0 0 36px!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+#app .conversation-screen .media-message-content {
+  grid-column:2!important;
+  min-width:0!important;
+  justify-self:stretch!important;
+}
+#app .conversation-screen .message-row.media-message-row.mine .media-message-content {
+  grid-column:1!important;
+  justify-self:end!important;
+}
+#app .conversation-screen .media-message-content .meta-line {
+  width:100%!important;
+  margin-top:2px!important;
+}
+/* Keep the original light conversation layout; blue glass belongs on messages only. */
+#app .conversation-screen {
+  color-scheme:light!important;
+  color:#202326!important;
+  background:#fff!important;
+}
+#app .conversation-screen .chat-header,
+#app .conversation-screen .conversation-messages {
+  color:#202326!important;
+  background:#fff!important;
+}
+#app .conversation-screen .chat-header {
+  border-bottom:1px solid #ececef!important;
+  background:#fff!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+#app .conversation-screen .chat-back,
+#app .conversation-screen .chat-action {
+  color:#17191c!important;
+  background:transparent!important;
+}
+#app .conversation-screen .chat-identity-copy b { color:#17191c!important; }
+#app .conversation-screen .chat-subtitle { color:#6b6f76!important; }
+#app .conversation-screen .datesep {
+  border-color:#e5e7eb!important;
+  background:#fff!important;
+  color:#6b6f76!important;
+}
+#app .conversation-screen .chat-group-time,
+#app .conversation-screen .message-time,
+#app .conversation-screen .message-status,
+#app .conversation-screen .meta-line { color:#858b8d!important; }
+#app .conversation-screen .chat-archive-notice,
+#app .conversation-screen .chat-archive-draft {
+  border-color:#e8e9e6!important;
+  background:#f7f8f7!important;
+  color:#60666a!important;
+}
+#app .conversation-screen .chat-archive-notice b,
+#app .conversation-screen .chat-archive-draft b { color:#272b2f!important; }
+#app .conversation-screen .chat-archive-new {
+  border-color:#e8e9e6!important;
+  background:#fff!important;
+  color:#272b2f!important;
+}
+#app .conversation-screen .bubble-msg.theirs:not(.media-card-message):not(.location-request-message) {
+  border:1px solid rgba(23,25,28,.08)!important;
+  background:#f6f4ef!important;
+  color:#17191c!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+#app .conversation-screen .bubble-msg.theirs .quote {
+  border-color:rgba(23,25,28,.28)!important;
+  color:#4a4e54!important;
+}
+#app .conversation-screen .reaction-chip {
+  border-color:#e4e7e8!important;
+  background:#fff!important;
+  color:#48535a!important;
+}
+#app .conversation-screen .reaction-chip span { color:#69747b!important; }
+#app .conversation-screen .reaction-chip.mine {
+  border-color:#dce0e3!important;
+  background:#f1f2f3!important;
+  color:#454a51!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+#app .conversation-screen .message-file,
+#app .conversation-screen .bubble-msg.theirs .message-file {
+  border-color:rgba(120,130,145,.22)!important;
+  background:#fff!important;
+  color:#30343b!important;
+}
+#app .conversation-screen .composer {
+  border-color:#e5e7eb!important;
+  background:#fff!important;
+  color:#252b34!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+#app .conversation-screen .chat-composer button {
+  color:#555d66!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#app .conversation-screen .chat-composer #chat-add {
+  color:#1456d9!important;
+  background:#f0f4fc!important;
+}
+#app .conversation-screen .chat-composer #mic { color:var(--color-burgundy)!important; }
+#app .conversation-screen .chat-composer button[type=submit] {
+  color:#fff!important;
+  background:var(--color-burgundy)!important;
+  border-color:transparent!important;
+}
+#app .conversation-screen .chat-composer textarea {
+  color:#252b34!important;
+  background:transparent!important;
+}
+#app .conversation-screen .chat-composer textarea::placeholder { color:#6b6f76!important; }
+#app .conversation-screen .chat-compose-tools {
+  border-color:#e7eaf0!important;
+  background:#fff!important;
+  box-shadow:0 10px 28px rgba(20,30,48,.13)!important;
+}
+#app .conversation-screen .chat-compose-tools button {
+  border-color:#edf0f4!important;
+  background:#f8f9fb!important;
+  color:#303947!important;
+}
+#app .conversation-screen .chat-compose-tools button .navic { color:var(--color-primary)!important; }
+#app .conversation-screen .replybar,
+#app .conversation-screen .pinbar { color:#6b6f76!important; }
+#app .conversation-screen .replybar button {
+  background:#f2f4f7!important;
+  color:#17191c!important;
+}
+#app .conversation-screen .chat-empty-intro { color:#17191c!important; }
+#app .conversation-screen .chat-empty-avatar,
+#app .conversation-screen .chat-empty-avatar > .chat-avatar-initial,
+#app .conversation-screen .chat-hello-sticker {
+  background:#f1f2f4!important;
+  color:#646a72!important;
+}
+#app .conversation-screen .chat-empty-name { color:#17191c!important; }
+#app .conversation-screen .chat-empty-handle,
+#app .conversation-screen .chat-empty-date,
+#app .conversation-screen .chat-empty-greeting { color:#737981!important; }
+#app .conversation-screen .chat-empty-follow {
+  border:0!important;
+  background:var(--color-burgundy)!important;
+  color:#fff!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  box-shadow:none!important;
+}
+#app .conversation-screen .chat-empty-follow.following {
+  background:#f0f0f2!important;
+  color:#454a51!important;
+}
+.chat-message-context-backdrop {
+  position:fixed!important;
+  inset:0!important;
+  z-index:10020!important;
+  display:block!important;
+  width:100vw!important;
+  height:100dvh!important;
+  min-height:100vh!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:rgba(245,246,250,.42)!important;
+  color:transparent!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:blur(11px)!important;
+  backdrop-filter:blur(11px)!important;
+}
+.chat-message-context {
+  position:fixed!important;
+  z-index:10021!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:8px!important;
+  max-height:calc(100dvh - 24px)!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+  padding:0!important;
+  color:#17191c!important;
+  scrollbar-width:none!important;
+}
+.chat-message-context::-webkit-scrollbar { display:none!important; }
+.chat-message-reaction-tray {
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:2px!important;
+  min-height:58px!important;
+  padding:6px 10px!important;
+  border:1px solid rgba(25,28,34,.08)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.96)!important;
+  box-shadow:0 5px 20px rgba(17,22,30,.12)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(140%)!important;
+  backdrop-filter:blur(16px) saturate(140%)!important;
+}
+.chat-message-reaction-tray button {
+  display:grid!important;
+  flex:0 0 38px!important;
+  width:38px!important;
+  height:40px!important;
+  min-width:38px!important;
+  place-items:center!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:50%!important;
+  background:transparent!important;
+  color:#17191c!important;
+  font-size:25px!important;
+  line-height:1!important;
+}
+.chat-message-reaction-tray button:active { background:#f0f1f3!important; }
+.chat-message-reaction-tray .chat-message-reaction-more svg { width:20px!important;height:20px!important; }
+.chat-message-context-preview {
+  width:max-content!important;
+  max-width:100%!important;
+  min-height:42px!important;
+  padding:11px 14px!important;
+  border:1px solid rgba(25,28,34,.06)!important;
+  border-radius:18px!important;
+  background:rgba(247,247,250,.96)!important;
+  color:#17191c!important;
+  font-size:15px!important;
+  line-height:1.35!important;
+  overflow-wrap:anywhere!important;
+  box-shadow:0 3px 12px rgba(17,22,30,.08)!important;
+}
+.chat-message-context-options {
+  width:min(270px,100%)!important;
+  justify-self:start!important;
+  overflow:hidden!important;
+  padding:8px 0!important;
+  border:1px solid rgba(25,28,34,.08)!important;
+  border-radius:20px!important;
+  background:rgba(255,255,255,.94)!important;
+  color:#17191c!important;
+  box-shadow:0 7px 24px rgba(17,22,30,.16)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(150%)!important;
+  backdrop-filter:blur(20px) saturate(150%)!important;
+}
+.chat-message-context-time {
+  padding:3px 16px 7px!important;
+  color:#777b82!important;
+  font-size:12px!important;
+  line-height:18px!important;
+}
+.chat-message-context-options button {
+  display:grid!important;
+  grid-template-columns:30px minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:8px!important;
+  width:100%!important;
+  min-height:52px!important;
+  padding:0 16px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:#17191c!important;
+  font-size:15px!important;
+  font-weight:450!important;
+  text-align:left!important;
+  box-shadow:none!important;
+}
+.chat-message-context-options button:active { background:rgba(20,24,32,.06)!important; }
+.chat-message-context-options .chat-context-icon svg {
+  width:22px!important;
+  height:22px!important;
+  color:currentColor!important;
+  stroke:currentColor!important;
+}
+.chat-message-context-options button.is-report,
+.chat-message-context-options button.is-report .chat-context-icon svg {
+  color:#d63235!important;
+}
+.chat-context-more-glyph {
+  font-size:20px!important;
+  letter-spacing:1px!important;
+  line-height:1!important;
+}
+.chat-context-chevron {
+  color:#5d626a!important;
+  font-size:26px!important;
+  line-height:1!important;
+}
+.chat-message-context button:focus-visible {
+  outline:2px solid #1456d9!important;
+  outline-offset:-2px!important;
+}
+
+/* The saved state on media rails uses a filled white bookmark. */
+#app .clip .act[data-save].on .navic,
+#app .clip .act[data-save].on svg,
+#app .post-viewer-screen.post-viewer-media .act[data-save].on .navic,
+#app .post-viewer-screen.post-viewer-media .act[data-save].on svg,
+.blast-screen .blast-post-actions [data-blast-save].is-on .navic,
+.blast-screen .blast-post-actions [data-blast-save].is-on svg {
+  color:#fff!important;
+  fill:#fff!important;
+  stroke:#fff!important;
+  filter:none!important;
+}

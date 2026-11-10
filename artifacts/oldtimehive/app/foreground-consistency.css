@@ -1,0 +1,31 @@
+/*
+ * Verified foreground corrections only.
+ * Loaded last by app.js; each rule is scoped to a known light surface.
+ * Immersive media, Stories, Community, authored content, and dark tools remain
+ * owned by their existing contextual palettes.
+ */
+
+/* The profile identity and its metadata sit on the white profile surface. */
+#app .profile-screen .profile-simple-hero .profile-city small,
+#app .profile-screen .profile-simple-hero .profile-interest-list > small {
+  color:var(--color-muted,#6b6f76);
+}
+
+/* Explore search is on the established pale search field / white screen. */
+#app .search-screen .discovery-search.discovery-search::placeholder {
+  color:var(--color-muted,#6b6f76);
+  opacity:1;
+}
+
+/* Rank markers are actual small text, not decorative chevrons or imagery. */
+#app .search-screen .discovery-trend-rank {
+  color:var(--color-muted,#6b6f76);
+}
+
+/* Settings descriptions and values are on the ordinary white settings screen. */
+#app .account-settings-screen .settings-entry-copy small,
+#app .account-settings-screen .settings-entry-value,
+#app .account-settings-screen .settings-entry-state,
+#app .account-settings-screen .settings-entry-meta {
+  color:var(--color-muted,#6b6f76);
+}

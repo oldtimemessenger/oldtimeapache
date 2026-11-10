@@ -1,0 +1,356 @@
+/* Story layout refinements keep the existing Oldtime actions and icon set. */
+#storyview.storyview .story-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  top: max(27px, calc(env(safe-area-inset-top) + 22px));
+  left: 14px;
+  right: 60px;
+  min-width: 0;
+}
+
+#storyview.storyview .story-creator {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: min(220px, calc(100% - 52px));
+}
+
+#storyview.storyview .story-creator-copy {
+  min-width: 0;
+}
+
+#storyview.storyview .story-creator-copy b {
+  display: block;
+  max-width: min(45vw, 170px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#storyview.storyview .story-header-actions {
+  display: flex;
+  flex: 0 0 42px;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  margin-left: auto;
+}
+
+#storyview.storyview .story-owner-controls,
+#storyview.storyview .story-more-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+#storyview.storyview .story-more-open {
+  display: grid;
+  flex: 0 0 42px;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  color: #fff;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+#storyview.storyview .story-more-open .navic {
+  width: 20px;
+  height: 20px;
+}
+
+#storyview.storyview .story-more-open:active {
+  opacity: .72;
+  transform: scale(.94);
+}
+
+#storyview.storyview > #sclose {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+#storyview.storyview .story-bar {
+  left: max(12px, env(safe-area-inset-left));
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  max-width: 620px;
+}
+
+#storyview.storyview .story-compose {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  height: 48px;
+  border-color: rgba(255, 255, 255, .32);
+  background: rgba(9, 12, 18, .56);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .16);
+}
+
+#storyview.storyview > .story-more-menu {
+  position: absolute !important;
+  top: max(82px, calc(env(safe-area-inset-top) + 82px)) !important;
+  right: max(12px, env(safe-area-inset-right)) !important;
+  bottom: auto !important;
+  left: auto !important;
+  width: min(320px, calc(100% - 24px));
+  max-width: min(320px, calc(100% - 24px));
+  max-height: min(60dvh, calc(100dvh - max(112px, env(safe-area-inset-top) + 112px)));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transform: none !important;
+  transition: opacity .18s ease-out;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 20px;
+  background: rgba(13, 17, 24, .97);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .38);
+}
+
+#storyview.storyview .story-panel-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgba(13, 17, 24, .98);
+}
+
+#storyview.storyview .story-panel-tab[aria-selected="true"] {
+  color: #fff;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+@media (max-width: 360px) {
+  #storyview.storyview .story-header {
+    left: 10px;
+    right: 56px;
+    gap: 4px;
+  }
+
+  #storyview.storyview .story-header-actions {
+    flex-basis: 38px;
+    min-width: 38px;
+  }
+
+  #storyview.storyview .story-more-open {
+    flex-basis: 38px;
+    width: 38px;
+    height: 38px;
+  }
+
+}
+
+@media (min-width: 700px) {
+  #storyview.storyview .story-header {
+    top: calc(50% - var(--story-frame-height) / 2 + 28px);
+    left: calc(50% - var(--story-frame-width) / 2 + 14px);
+    right: calc(50% - var(--story-frame-width) / 2 + 60px);
+  }
+
+  #storyview.storyview .story-bar {
+    left: calc(50% - var(--story-frame-width) / 2 + 12px);
+    right: calc(50% - var(--story-frame-width) / 2 + 12px);
+    bottom: calc(50% - var(--story-frame-height) / 2 + 12px);
+    max-width: calc(var(--story-frame-width) - 24px);
+  }
+
+  #storyview.storyview > .story-more-menu {
+    top: calc(50% - var(--story-frame-height) / 2 + 78px) !important;
+    right: calc(50% - var(--story-frame-width) / 2 + 12px) !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: min(320px, calc(var(--story-frame-width) - 24px));
+    max-width: calc(var(--story-frame-width) - 24px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #storyview.storyview .story-more-open {
+    transition: none;
+  }
+}
+
+/* Keep Story actions visually consistent with Home's unboxed black-and-white icons. */
+#storyview.storyview .story-reaction-picker button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  color: #fff !important;
+}
+
+#storyview.storyview .story-reaction-picker button {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  font-size: 23px;
+  filter: none;
+}
+
+/* A single slim reply pill keeps the viewer's own photo and reactions inline. */
+#storyview.storyview .story-compose {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-height:50px;
+  height:50px;
+  padding:4px 8px 4px 5px;
+  border:1px solid rgba(255,255,255,.58);
+  border-radius:999px;
+  color:#fff;
+  background:rgba(0,0,0,.12);
+  box-shadow:none;
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+#storyview.storyview .story-compose:focus-within {
+  border-color:rgba(255,255,255,.82);
+  background:rgba(0,0,0,.14);
+  box-shadow:none;
+}
+#storyview.storyview .story-viewer-avatar {
+  display:block;
+  flex:0 0 38px;
+  width:38px;
+  height:38px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.62);
+  border-radius:50%;
+  object-fit:cover;
+}
+#storyview.storyview .story-viewer-avatar[hidden] { display:none; }
+#storyview.storyview .story-reply-input {
+  flex:1 1 auto;
+  min-width:58px;
+  height:40px;
+  padding:0 2px;
+  color:#fff;
+  font-size:16px;
+  line-height:1.2;
+  text-shadow:0 1px 3px rgba(0,0,0,.6);
+}
+#storyview.storyview .story-reply-input::placeholder {
+  color:rgba(255,255,255,.96);
+  text-shadow:0 1px 3px rgba(0,0,0,.68);
+}
+#storyview.storyview .story-compose .story-reaction-picker {
+  position:static;
+  flex:0 1 158px;
+  width:auto;
+  min-width:80px;
+  max-width:168px;
+  height:40px;
+  min-height:40px;
+  gap:2px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  overscroll-behavior-x:contain;
+  touch-action:pan-x;
+  scroll-snap-type:x proximity;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+#storyview.storyview .story-compose .story-reaction-picker::-webkit-scrollbar { display:none; }
+#storyview.storyview .story-compose .story-reaction-picker[hidden] { display:none!important; }
+#storyview.storyview .story-compose .story-reaction-picker button {
+  flex:0 0 36px;
+  width:36px;
+  min-width:36px;
+  height:38px;
+  min-height:38px;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:inherit!important;
+  filter:none!important;
+  font-size:23px;
+  line-height:1;
+  scroll-snap-align:center;
+  text-shadow:0 1px 3px rgba(0,0,0,.28);
+}
+#storyview.storyview .story-compose .story-reaction-picker button:disabled { opacity:.48; }
+#storyview.storyview .story-compose .story-reaction-picker button.is-selected { transform:scale(1.08); }
+#storyview.storyview .story-send {
+  flex:0 0 36px;
+  width:36px;
+  height:36px;
+  box-shadow:none;
+}
+#storyview.storyview:has(>.story-stage.is-light-background) .story-compose {
+  background:rgba(255,255,255,.18);
+  border-color:rgba(23,25,28,.46);
+  box-shadow:none;
+}
+#storyview.storyview:has(>.story-stage.is-light-background) .story-viewer-avatar {
+  border-color:rgba(23,25,28,.42);
+}
+#storyview.storyview:has(>.story-stage.is-light-background) .story-reply-input {
+  color:#17191c;
+  text-shadow:0 1px 3px rgba(255,255,255,.7);
+}
+#storyview.storyview:has(>.story-stage.is-light-background) .story-reply-input::placeholder {
+  color:rgba(23,25,28,.9);
+  text-shadow:0 1px 3px rgba(255,255,255,.72);
+}
+
+#storyview.storyview .story-creator img {
+  aspect-ratio: 1;
+  border-radius: 50% !important;
+  clip-path: circle(50%);
+  object-fit: cover;
+}
+
+#storyview.storyview .story-post-source,
+#storyview.storyview .story-stage-source,
+#storyview.storyview .story-comment-source {
+  position: absolute;
+  z-index: 5;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  cursor: pointer;
+}
+
+#storyview.storyview .story-post-source {
+  transform: translate(-50%, -50%) rotate(var(--story-source-rotation, 0deg));
+}
+
+#storyview.storyview .story-stage-source {
+  inset: 0;
+}
+
+#storyview.storyview .story-comment-source {
+  top: 50%;
+  left: 50%;
+  width: min(86%, 560px);
+  height: min(28%, 230px);
+  transform: translate(-50%, -50%);
+  border-radius: 0;
+}
+
+#storyview.storyview .story-post-source:focus-visible,
+#storyview.storyview .story-stage-source:focus-visible,
+#storyview.storyview .story-comment-source:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, .9);
+  outline-offset: 2px;
+}
