@@ -85,6 +85,7 @@ import "./brand-selection.css";
 import { openCreativeEditor } from "./open-creative-editor.js";
 import { purgeAllCreativeDrafts } from "./creative-drafts.js";
 import { SPORTS_MODE_ENABLED } from "../../../lib/sports/feature-state.js";
+import "./sports-header.css";
 import { creativeMediaMarkup, creativeAttribution } from "./creative-markup.js";
 import { CREATOR_TOOL_ROUTES, renderCreatorScreen, resetCreatorScreenState, blueBadgeMarkup, hydrateBlueBadges } from "./creator-center.js";
 import { ACCOUNT_TOOL_ROUTES,getAccountTools,loadAccountTools,resetAccountTools,renderAccountToolsScreen } from "./account-professional.js";
@@ -1676,11 +1677,20 @@ function cacheScreenScroll(context, snapshot) {
     screenScrollCache.delete(screenScrollCache.keys().next().value);
   }
 }
+function openSportsFromHeader() {
+  if (!SPORTS_MODE_ENABLED) {
+    toast("Sports is being prepared while workout recording and publishing are verified.");
+    return;
+  }
+  void navigateFromDrawer("sports");
+}
 function shell(inner, mode, { hideNav = false } = {}) {
   hideNav = hideNav || (tab === "chat" && Boolean(chatId));
   if (!hideNav && tab === "updates" && !profileId && !viewer) {
     inner = inner.replace(/(<(?:header|div)\b[^>]*\bclass="[^"]*\bhome-primary-row\b[^"]*"[^>]*>)/,
       opening => opening + `<button type="button" class="app-search-shortcut" data-tab="search" aria-label="Search" data-testid="button-header-search">${ic.search}</button>`);
+    inner = inner.replace(/(<span class="home-header-actions">)/,
+      opening => opening + `<button type="button" class="app-sports-shortcut" data-sports-open aria-label="Sports" title="Sports" aria-disabled="${!SPORTS_MODE_ENABLED}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l3 10H4L7 7Z"/><path d="M9 11v4m-2-2h4m4-1h.01M17 14h.01M8 7l1-3h6l1 3"/></svg><span>Sports</span></button>`);
   }
   if (!hideNav && tab === "communities") {
     const owner = api.me();
@@ -1709,6 +1719,8 @@ function shell(inner, mode, { hideNav = false } = {}) {
     if (profileShortcut) profileShortcut.onclick = () => navigateMainSection("profile");
     const homeSearchShortcut = app.querySelector(".app-search-shortcut");
     if (homeSearchShortcut) homeSearchShortcut.onclick = () => navigateMainSection("search");
+    const sportsShortcut = app.querySelector(".app-sports-shortcut");
+    if (sportsShortcut) sportsShortcut.onclick = openSportsFromHeader;
     // A refresh can move Home between empty/loading and real media without
     // replacing its screen. Keep the surrounding navigation theme in sync.
     app.querySelector(".phone")?.classList.toggle("light", light);
@@ -2018,7 +2030,7 @@ async function navigateFromDrawer(route) {
   if (route === "sports" && !SPORTS_MODE_ENABLED) route = "updates";
   const isSupportRoute = route === "help" || route.startsWith("help-");
   const isToolsRoute = ACCOUNT_TOOL_ROUTES.includes(route) || CREATOR_TOOL_ROUTES.includes(route);
-  if (!isSupportRoute && !isToolsRoute && !["updates", "search", "communities", "chat", "profile", "notes", "settings"].includes(route)) {
+  if (!isSupportRoute && !isToolsRoute && !["updates", "search", "communities", "chat", "profile", "notes", "settings", "sports"].includes(route)) {
     route = "updates";
   }
   if (route === "communities") return navigateMainSection("communities");
@@ -2820,6 +2832,8 @@ function updates() {
   });
   const notificationsOpenButton = $("#notifications-open");
   if (notificationsOpenButton) notificationsOpenButton.onclick = openNotifications;
+  const sportsShortcut = app.querySelector(".app-sports-shortcut");
+  if (sportsShortcut) sportsShortcut.onclick = openSportsFromHeader;
   app.querySelector("[data-manage-close-friends]")?.addEventListener("click", async () => {
     settingsView = "close-friends";
     await navigateFromDrawer("settings");
