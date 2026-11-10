@@ -54,7 +54,7 @@ function note(text) {
 }
 
 export async function startCall(convoId, video) {
-  if (document.getElementById("open-mic-overlay")) throw new Error("Leave Open Mic before starting a one-to-one call.");
+  if (typeof document !== "undefined" && document.getElementById("open-mic-overlay")) throw new Error("Leave Open Mic before starting a one-to-one call.");
   const me = api.me();
   const conversation = api.db().convos.find(item => item.id === convoId);
   if (!me || !conversation) throw new Error("Chat unavailable.");
