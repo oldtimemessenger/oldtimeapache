@@ -110,3 +110,87 @@
 @media (prefers-reduced-motion:reduce) {
   .cs-studio *, #app :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items) button { transition:none!important; }
 }
+
+/* Story/status capture controls — unify chrome while preserving live camera and canvas pixels. */
+.sc-root {
+  --sc-chrome:rgba(9,10,14,.82);
+  --sc-panel:#11131a;
+  --sc-line:rgba(255,255,255,.16);
+  --sc-ink:#f5f6fa;
+  --sc-muted:#a0a6b2;
+  color:var(--sc-ink);
+  color-scheme:dark;
+}
+.sc-root .sc-icon,
+.sc-root .sc-aa {
+  border:1px solid var(--sc-line);
+  background:var(--sc-chrome);
+  color:var(--sc-ink);
+  backdrop-filter:blur(14px) saturate(1.15);
+  -webkit-backdrop-filter:blur(14px) saturate(1.15);
+}
+.sc-root .sc-icon[aria-pressed="true"] {
+  background:#f5f6fa;
+  color:#08090c;
+  border-color:transparent;
+}
+.sc-root .sc-thumb {
+  border-color:#f5f6fa;
+  box-shadow:0 4px 18px rgba(0,0,0,.32);
+}
+.sc-root .sc-pill {
+  background:#f5f6fa;
+  color:#08090c!important;
+  border:1px solid transparent;
+}
+.sc-root .sc-pill-ghost {
+  background:rgba(17,19,26,.82);
+  color:#f5f6fa!important;
+  border-color:var(--sc-line);
+}
+.sc-root .sc-chip {
+  background:rgba(9,10,14,.58);
+  border-color:var(--sc-line);
+  color:#f5f6fa;
+  backdrop-filter:blur(10px);
+}
+.sc-root .sc-chip[aria-pressed="true"] {
+  background:#f5f6fa;
+  border-color:#f5f6fa;
+  color:#08090c;
+}
+.sc-root .sc-aud {
+  background:rgba(9,10,14,.62);
+  border-color:rgba(255,255,255,.52);
+  color:#f5f6fa;
+  backdrop-filter:blur(10px);
+}
+.sc-root .sc-aud[aria-checked="true"] {
+  background:#f5f6fa;
+  border-color:#f5f6fa;
+  color:#08090c;
+}
+.sc-root .sc-aud-cf[aria-checked="true"] {
+  background:#8dba91;
+  border-color:#8dba91;
+  color:#101510;
+}
+.sc-root .sc-send {
+  background:linear-gradient(to top,rgba(5,6,9,.94),rgba(5,6,9,.66),transparent);
+}
+.sc-root .sc-texted {
+  background:rgba(5,6,9,.76);
+  backdrop-filter:blur(16px);
+}
+.sc-root .sc-textarea {
+  background:rgba(17,19,26,.78);
+  border:1px solid var(--sc-line);
+  color:#f5f6fa;
+}
+.sc-root .sc-textarea::placeholder { color:#a0a6b2; }
+.sc-root .sc-sendbtn {
+  background:#f5f6fa;
+  color:#08090c;
+}
+.sc-root .sc-disclosure { color:#c3c8d2; }
+.sc-root .sc-error { background:#351b20; color:#ffb4b4; }
