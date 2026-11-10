@@ -11,3 +11,25 @@
 @media(min-width:700px){.om-content{padding:34px 38px 42px}.om-lobby-intro{padding-top:32px}.om-room-list{grid-template-columns:repeat(2,minmax(0,1fr))}.om-control-dock{margin:20px 0 0;padding:14px 0;background:rgba(8,11,15,.9);border:0}.om-stage-people{min-height:180px}}
 @media(max-width:380px){.om-content{padding:18px 14px calc(26px + env(safe-area-inset-bottom))}.om-topbar{padding-inline:14px}.om-control-dock{margin-inline:-14px;padding-inline:14px}.om-lobby-intro h1,.om-create-page h1{font-size:39px}.om-stage-person{width:78px}.om-stage-person .om-avatar{width:54px;height:54px}}
 @media(prefers-reduced-motion:reduce){.open-mic-overlay *{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+/* Open Mic header shortcut: compact, unmistakable and separate from Sports. */
+#app .phone .app-open-mic-shortcut{
+  position:absolute;right:0;top:0;bottom:0;margin-block:auto;
+  width:36px;height:36px;display:grid;place-items:center;
+  border:1px solid rgba(201,247,138,.28);border-radius:50%;
+  background:linear-gradient(145deg,#1c2b20,#111a17);color:#c9f78a;
+  box-shadow:0 5px 18px rgba(0,0,0,.2);cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+#app .phone .app-open-mic-shortcut svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#app .phone .app-open-mic-shortcut:active{transform:scale(.94);background:#233527}
+#app .phone .app-open-mic-shortcut:focus-visible{outline:2px solid #c9f78a;outline-offset:3px}
+#app .phone .home-primary-row:has(.app-open-mic-shortcut){padding-right:156px}
+#app .phone .home-primary-row:has(.app-open-mic-shortcut)>.app-sports-shortcut{right:44px}
+#app .phone .home-primary-row:has(.app-open-mic-shortcut)>.app-search-shortcut{left:0;right:auto}
+@media(max-width:360px){
+  #app .phone .app-open-mic-shortcut{width:34px;height:34px}
+  #app .phone .home-primary-row:has(.app-open-mic-shortcut){padding-right:148px}
+  #app .phone .home-primary-row:has(.app-open-mic-shortcut)>.app-sports-shortcut{right:40px}
+}
+@media(prefers-reduced-motion:reduce){#app .phone .app-open-mic-shortcut{transition:none}}
