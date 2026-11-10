@@ -4141,7 +4141,7 @@ test(process.env.OLDTIME_STORY_REPLY_ONLY === "1"
       "the sound picker stays inset from the screen edges");
     assert.ok(soundPickerLayout.height <= 320,
       "the sound picker remains compact and scrolls internally when needed");
-    assert.equal(soundPickerLayout.background, "rgb(23, 24, 27)",
+    assert.equal(soundPickerLayout.background, "rgb(17, 19, 26)",
       "the sound picker is opaque instead of ghosting the editor underneath");
     await page.locator("#ce-sound-close").click();
     assert.ok(await page.evaluate(() => window.__getUserMediaCalls) >= cameraCallsBeforeGallery,
