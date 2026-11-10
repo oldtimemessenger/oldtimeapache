@@ -1,0 +1,21 @@
+/* Open Mic header shortcut: compact, unmistakable and separate from Sports. */
+#app .phone .app-open-mic-shortcut{
+  position:absolute;right:0;top:0;bottom:0;margin-block:auto;
+  width:36px;height:36px;display:grid;place-items:center;
+  border:1px solid rgba(201,247,138,.28);border-radius:50%;
+  background:linear-gradient(145deg,#1c2b20,#111a17);color:#c9f78a;
+  box-shadow:0 5px 18px rgba(0,0,0,.2);cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+#app .phone .app-open-mic-shortcut svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#app .phone .app-open-mic-shortcut:active{transform:scale(.94);background:#233527}
+#app .phone .app-open-mic-shortcut:focus-visible{outline:2px solid #c9f78a;outline-offset:3px}
+#app .phone .home-primary-row:has(.app-open-mic-shortcut){padding-right:156px}
+#app .phone .home-primary-row:has(.app-open-mic-shortcut)>.app-sports-shortcut{right:44px}
+#app .phone .home-primary-row:has(.app-open-mic-shortcut)>.app-search-shortcut{left:0;right:auto}
+@media(max-width:360px){
+  #app .phone .app-open-mic-shortcut{width:34px;height:34px}
+  #app .phone .home-primary-row:has(.app-open-mic-shortcut){padding-right:148px}
+  #app .phone .home-primary-row:has(.app-open-mic-shortcut)>.app-sports-shortcut{right:40px}
+}
+@media(prefers-reduced-motion:reduce){#app .phone .app-open-mic-shortcut{transition:none}}
