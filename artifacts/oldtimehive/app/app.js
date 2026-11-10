@@ -87,6 +87,7 @@ import { purgeAllCreativeDrafts } from "./creative-drafts.js";
 import { SPORTS_MODE_ENABLED } from "../../../lib/sports/feature-state.js";
 import "./sports-header.css";
 import "./sports-header-entry.css";
+import "./open-mic.css";
 import { creativeMediaMarkup, creativeAttribution } from "./creative-markup.js";
 import { CREATOR_TOOL_ROUTES, renderCreatorScreen, resetCreatorScreenState, blueBadgeMarkup, hydrateBlueBadges } from "./creator-center.js";
 import { ACCOUNT_TOOL_ROUTES,getAccountTools,loadAccountTools,resetAccountTools,renderAccountToolsScreen } from "./account-professional.js";
@@ -150,6 +151,14 @@ app?.addEventListener("click", event => {
   event.preventDefault(); event.stopPropagation();
   if (!SPORTS_MODE_ENABLED) { toast("Sports is being prepared. Workout recording will open once its safety checks are complete."); return; }
   void navigateFromDrawer("sports");
+}, true);
+app?.addEventListener("click", event => {
+  const button = event.target.closest?.("[data-open-mic-launch]");
+  if (!button) return;
+  event.preventDefault(); event.stopPropagation();
+  void import("./open-mic.js").then(module => module.openMic()).catch(error => {
+    toast(error?.message || "Open Mic could not open. Please try again.");
+  });
 }, true);
 installAvatarFallbacks(app);
 installVideoMediaSession();
@@ -1696,7 +1705,7 @@ function shell(inner, mode, { hideNav = false } = {}) {
   hideNav = hideNav || (tab === "chat" && Boolean(chatId));
   if (!hideNav && tab === "updates" && !profileId && !viewer) {
     inner = inner.replace(/(<(?:header|div)\b[^>]*\bclass="[^"]*\bhome-primary-row\b[^"]*"[^>]*>)/,
-      opening => opening + `<button type="button" class="app-search-shortcut" data-tab="search" aria-label="Search" data-testid="button-header-search">${ic.search}</button><button type="button" class="app-sports-shortcut" data-sports-open data-sports-launch aria-label="${SPORTS_MODE_ENABLED ? "Open Sports mode" : "Sports mode coming soon"}" title="${SPORTS_MODE_ENABLED ? "Open Sports mode" : "Sports mode coming soon"}" aria-disabled="${!SPORTS_MODE_ENABLED}" data-testid="button-header-sports"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l3 10a2 2 0 0 1-3.2 2L12 15l-4.8 4A2 2 0 0 1 4 17L7 7Z"/><path d="M9 10v4m-2-2h4m5-1h.01M18 13h.01"/></svg><span>Sports</span></button>`);
+      opening => opening + `<button type="button" class="app-search-shortcut" data-tab="search" aria-label="Search" data-testid="button-header-search">${ic.search}</button><button type="button" class="app-sports-shortcut" data-sports-open data-sports-launch aria-label="${SPORTS_MODE_ENABLED ? "Open Sports mode" : "Sports mode coming soon"}" title="${SPORTS_MODE_ENABLED ? "Open Sports mode" : "Sports mode coming soon"}" aria-disabled="${!SPORTS_MODE_ENABLED}" data-testid="button-header-sports"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l3 10a2 2 0 0 1-3.2 2L12 15l-4.8 4A2 2 0 0 1 4 17L7 7Z"/><path d="M9 10v4m-2-2h4m5-1h.01M18 13h.01"/></svg><span>Sports</span></button><button type="button" class="app-open-mic-shortcut" data-open-mic-launch aria-label="Open Mic" title="Open Mic" data-testid="button-header-open-mic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5m-4 0h8"/></svg></button>`);
   }
   if (!hideNav && tab === "communities") {
     const owner = api.me();

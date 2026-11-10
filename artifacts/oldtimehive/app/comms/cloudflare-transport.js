@@ -65,6 +65,8 @@ export function createCloudflareTransport({ url, requestTicket, isCurrent }) {
             emit("call:signal", message.data);
             return;
           }
+          if (message.event === "open-mic:signal" && message.data && typeof message.data === "object") { emit("open-mic:signal", message.data); return; }
+          if (message.event === "open-mic:delivery-error" && message.data && typeof message.data === "object") { emit("open-mic:delivery-error", message.data); return; }
           if (message.event === "chat:changed" || message.event === "notifications:changed") queue(message);
         } catch {}
       };
@@ -114,6 +116,11 @@ export function createCloudflareTransport({ url, requestTicket, isCurrent }) {
       } catch {
         return false;
       }
+    },
+    sendOpenMicSignal(data) {
+      if (stopped || !visible() || !isCurrent() || websocket?.readyState !== WebSocket.OPEN) return false;
+      try { websocket.send(JSON.stringify({ event: "open-mic:signal", data })); return true; }
+      catch { return false; }
     },
     setKeepAliveForCall(active) {
       keepAliveForCall = !!active;

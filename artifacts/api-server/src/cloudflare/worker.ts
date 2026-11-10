@@ -46,6 +46,7 @@ import { normalizeClientPerformanceEvent } from "./performance-telemetry";
 import { isCreatorPath, creatorRequest } from "./creators";
 import { appleServerNotification, type AppleBillingConfig } from "./apple-billing";
 import { realtimeTicket,realtimeUpgrade,notifyRealtime,dispatchRealtime,type RealtimeNamespace } from "./realtime";
+import { openMicRequest } from "./open-mic";
 import { confirmEmailChange, requestEmailChange, showEmailChangeConfirmation } from "./email-verification";
 import { confirmPasswordRecovery, requestPasswordRecovery } from "./password-recovery";
 import {
@@ -775,6 +776,13 @@ async function handleRequest(
     if(!user)return json({error:"Your session has expired. Sign in again."},401);
     if(!(await limitAttempts(request,env.DB,`realtime:${user.id}`,20)))return json({error:"Too many connection attempts. Try again in a minute."},429);
     return realtimeTicket(request,env,user.id);
+  }
+  if(path.startsWith("/open-mic/")){
+    const user=await authenticate(request,env.DB);
+    if(!user)return json({error:"Your session has expired. Sign in again."},401);
+    if(request.method!=="GET"&&!(await limitAttempts(request,env.DB,`open-mic:${user.id}`,40)))
+      return json({error:"Too many Open Mic actions. Try again in a minute."},429);
+    return openMicRequest(request,env.DB,user.id,path);
   }
   if(path.startsWith("/analytics/")){
     const user=await authenticate(request,env.DB);
