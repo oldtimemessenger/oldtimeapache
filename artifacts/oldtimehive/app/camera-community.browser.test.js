@@ -978,6 +978,7 @@ test(process.env.OLDTIME_STORY_REPLY_ONLY === "1"
           }
         }
       });
+
     }, fixture);
 
     const page = await context.newPage();
@@ -3158,6 +3159,10 @@ test(process.env.OLDTIME_STORY_REPLY_ONLY === "1"
       await handle.click({ force: true });
     };
     const swipePlaceMap = async (selector, deltaY) => {
+      await page.waitForFunction(target => {
+        const sheet = document.querySelector(target)?.closest(".place-grid-sheet");
+        return sheet && sheet.getAnimations().every(animation => animation.playState === "finished");
+      }, selector);
       const handle = page.locator(selector);
       const box = await handle.boundingBox();
       assert.ok(box, `the map sheet handle has a touch target: ${selector}`);
@@ -4456,7 +4461,7 @@ test(process.env.OLDTIME_STORY_REPLY_ONLY === "1"
     assert.equal(await remixCounter.count(), 0,
       "Community cards omit the diagonal Remix badge shown in the attached screenshot");
     assert.deepEqual(await page.locator('[data-testid="card-community-post-browser-repost-post"] .community-post-actions').evaluate(element =>
-      [...element.children].map(child => child.matches("[data-like]") ? "like"
+      [...element.querySelectorAll(":scope > button")].map(child => child.matches("[data-like]") ? "like"
         : child.matches("[data-repost]") ? "repost"
           : child.matches("[data-comment]") ? "comment"
             : child.matches("[data-save]") ? "save"
@@ -4467,7 +4472,7 @@ test(process.env.OLDTIME_STORY_REPLY_ONLY === "1"
     assert.equal(communitySharePath, homeSharePath,
       "Community posts use the same curved forward-arrow share icon as Home");
     const communityIconStyle = await page.locator('[data-testid="card-community-post-browser-repost-post"] .community-post-actions').evaluate(element =>
-      [...element.querySelectorAll("svg")].map(svg => [svg.getAttribute("fill"), svg.getAttribute("stroke-width"), svg.getAttribute("stroke-linecap")])
+      [...element.querySelectorAll(":scope > button svg")].map(svg => [svg.getAttribute("fill"), svg.getAttribute("stroke-width"), svg.getAttribute("stroke-linecap")])
     );
     assert.equal(communityIconStyle.length, 5);
     assert.ok(communityIconStyle.every(([fill, width, cap]) => fill === "none" && width === "1.75" && cap === "round"),
@@ -4803,4 +4808,3 @@ test(process.env.OLDTIME_STORY_REPLY_ONLY === "1"
     else process.env.BASE_PATH = originalBasePath;
   }
 });
-

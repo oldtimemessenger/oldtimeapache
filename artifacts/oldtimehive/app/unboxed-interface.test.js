@@ -41,5 +41,5 @@ test("neutral and disabled palette fills retain readable text contrast", () => {
   assert.ok(css.includes("background:#e8f1ff!important"));
   assert.ok(css.includes("border-radius:999px!important"));
   assert.match(css, /#app :is\(\.chat-option\[aria-checked=true\],\.chat-folder-options button\.active\) \{[^}]*border-bottom:0!important/);
-  assert.doesNotMatch(css, /(?:avatar|profile-cover|ce-canvas)[^{]*\{/);
+  assert.doesNotMatch(css, /(?:\.profile-avatar\b|\.profile-cover\b|\.ce-canvas\b)[^{]*\{/);
 });

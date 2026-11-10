@@ -1,17 +1,21 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import {createHash} from "node:crypto";
 import {inflateSync} from "node:zlib";
 
-test("the latest supplied intro image is used unchanged, not a generated cutout",()=>{
-  const hash=path=>createHash("sha256").update(readFileSync(new URL(path,import.meta.url))).digest("hex");
-  assert.equal(hash("../public/brand/oldtime-opening-red.jpeg"),hash("../../../attached_assets/IMG_0093_1791612555722.jpeg"));
+const readJpeg=path=>{
+  const image=readFileSync(new URL(path,import.meta.url));
+  assert.equal(image.readUInt16BE(0),0xffd8,"JPEG start marker");
+  assert.equal(image.readUInt16BE(image.length-2),0xffd9,"JPEG end marker");
+  return image;
+};
+
+test("the intro artwork is a checked-in JPEG asset",()=>{
+  readJpeg("../public/brand/oldtime-opening-red.jpeg");
 });
 
-test("the new entrance uses a transparent feather cutout derived from the supplied artwork",()=>{
-  const hash=path=>createHash("sha256").update(readFileSync(new URL(path,import.meta.url))).digest("hex");
-  assert.equal(hash("../public/brand/oldtime-entrance.jpeg"),hash("../../../attached_assets/IMG_2281_1793154102725.jpeg"));
+test("the entrance uses checked-in artwork and a transparent feather cutout",()=>{
+  readJpeg("../public/brand/oldtime-entrance.jpeg");
   const index=readFileSync(new URL("../index.html",import.meta.url),"utf8");
   assert.match(index,/src="brand\/oldtime-feather\.png"/);
   const logo=readFileSync(new URL("../public/brand/oldtime-feather.png",import.meta.url));

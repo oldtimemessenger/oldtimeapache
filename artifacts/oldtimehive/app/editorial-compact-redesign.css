@@ -191,7 +191,7 @@
 /* Community: clean publication-like stream, not a stack of floating cards. */
 #app .phone .community-screen { padding-inline:0; }
 #app .phone .community-header {
-  min-height:calc(54px + env(safe-area-inset-top,0px));
+  min-height:calc(64px + env(safe-area-inset-top,0px));
   height:auto;gap:10px;
   border-bottom:1px solid var(--editorial-hairline);
   background:var(--color-surface,#fff);
@@ -358,6 +358,13 @@ html,body,#app { background:#050609;color:#f5f6fa; }
   background-color:#050609!important;
   color:#f5f6fa;
 }
+#app .phone .profile-screen {
+  background-color:#fff!important;
+}
+#app .phone .community-screen {
+  background-color:#fff!important;
+  color:#17191c!important;
+}
 #app .phone :is(.topbar,.community-header,.chat-header,.settings-header,.search-app-header,
   .profile-editor-header,.profile-topbar,.profile-simple-hero .profile-topbar) {
   background:#050609!important;
@@ -397,7 +404,7 @@ html,body,#app { background:#050609;color:#f5f6fa; }
   outline-color:rgba(255,255,255,.8);
 }
 #app .phone :is(.nav,.nav.lightnav) {
-  background:rgba(7,8,12,.97)!important;
+  background:#090a0c!important;
   color:#f5f6fa!important;
   border-top:1px solid rgba(255,255,255,.12)!important;
   box-shadow:0 -8px 28px rgba(0,0,0,.24)!important;
@@ -421,14 +428,23 @@ html,body,#app { background:#050609;color:#f5f6fa; }
   background:#20232c;
 }
 /* Profile reference: centered identity, three social metrics, compact action strip. */
-#app .phone .profile-screen .profile-simple-hero,
-#app .phone .profile-screen .profile-simple-hero .profile-topbar,
-#app .phone .profile-screen .profile-simple-hero .profile-intro {
+#app .phone .profile-screen .profile-simple-hero:not(.profile-no-cover),
+#app .phone .profile-screen .profile-simple-hero:not(.profile-no-cover) .profile-topbar,
+#app .phone .profile-screen .profile-simple-hero:not(.profile-no-cover) .profile-intro {
   background:#050609!important;color:#f5f6fa!important;
+}
+#app .phone .profile-screen .profile-simple-hero.profile-no-cover,
+#app .phone .profile-screen .profile-simple-hero.profile-no-cover .profile-topbar,
+#app .phone .profile-screen .profile-simple-hero.profile-no-cover .profile-intro {
+  background:#fff!important;color:#17191d!important;
 }
 #app .phone .profile-screen .profile-simple-hero .profile-topbar > button,
 #app .phone .profile-screen .profile-simple-hero .profile-topbar-actions > button {
   color:#f5f6fa!important;
+}
+#app .phone .profile-screen .profile-simple-hero.profile-no-cover .profile-topbar > button,
+#app .phone .profile-screen .profile-simple-hero.profile-no-cover .profile-topbar-actions > button {
+  color:#17191d!important;
 }
 #app .phone .profile-screen .profile-simple-hero .profile-intro {
   display:flex;flex-direction:column;align-items:center;
@@ -479,6 +495,15 @@ html,body,#app { background:#050609;color:#f5f6fa; }
   width:100%;display:grid;grid-template-columns:minmax(0,1fr) 48px 48px;
   gap:8px;margin-top:16px;
 }
+#app .phone .profile-screen .profile-simple-hero .profile-primary-actions.profile-owner-actions {
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+#app .phone .profile-screen .profile-simple-hero .profile-primary-actions.profile-visitor-actions {
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+#app .phone .profile-screen .profile-simple-hero .profile-primary-actions.profile-owner-actions > button {
+  border:0!important;border-radius:24px;background:#f0f1f4!important;color:#202329!important;
+}
 #app .phone .profile-screen .profile-simple-hero .profile-primary-actions > button {
   min-height:44px;border-radius:11px;
   background:#171920!important;border:1px solid rgba(255,255,255,.08)!important;
@@ -500,7 +525,7 @@ html,body,#app { background:#050609;color:#f5f6fa; }
   -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
 }
 #storyview.storyview .story-compose {
-  background:rgba(5,6,9,.48);border-color:rgba(255,255,255,.35);
+  background:rgba(0,0,0,.12);border-color:rgba(255,255,255,.35);
 }
 #storyview.storyview .story-send { background:#fff;color:#050609;box-shadow:none; }
 #storyview.storyview .story-more-menu { background:#11131a;color:#fff; }

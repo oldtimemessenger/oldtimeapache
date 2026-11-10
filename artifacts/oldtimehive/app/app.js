@@ -1433,12 +1433,12 @@ function bindPlacesActions() {
       if (Math.abs(deltaY) < 42) return;
       event.preventDefault();
       event.stopPropagation();
-      placeMapClickSuppressionUntil = Date.now() + 500;
       const visible = deltaY > 0;
       if (placesMapVisible !== visible) {
         placesMapVisible = visible;
         render();
       }
+      placeMapClickSuppressionUntil = Date.now() + 500;
     });
     handle.addEventListener("pointercancel", () => { startY = null; });
   });

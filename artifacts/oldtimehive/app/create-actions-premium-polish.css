@@ -74,6 +74,7 @@
   color:var(--ws-ink);
 }
 .cs-studio :is(.cs-pop,.ce-sound-picker) :is(button,.ce-field,.ce-sound-hint) { color:var(--ws-ink); }
+.cs-studio .ce-sound-picker { background:#17181b!important; }
 .cs-studio .cs-row-btn:active,
 .cs-studio .cs-row-btn[aria-pressed="true"] { background:#252a35; }
 .cs-studio .ce-sound-picker button { background:#1b1f29; border-color:var(--ws-line); color:var(--ws-ink); }

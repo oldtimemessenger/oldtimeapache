@@ -22,6 +22,14 @@
   border-color:var(--ot-hairline)!important;
   box-shadow:0 20px 64px rgba(0,0,0,.48);
 }
+#app .phone .share-recipient-panel.srp-main-view:has(.srp-text-snapshot) {
+  color:#17191d;
+  color-scheme:light;
+  background:#fff!important;
+}
+#app .phone .share-recipient-panel.srp-main-view:has(.srp-text-snapshot) #share-sheet-title {
+  color:#17191d;
+}
 :is(.audio-panel,.share-recipient-panel,.saved-social-panel,.pp-sheet,.rn-panel,
   .remix-studio,.chat-attachment-panel,.chat-location-share-panel) :is(h1,h2,h3,h4,b,strong) {
   color:var(--ot-ink);

@@ -79,7 +79,7 @@
 
 /* The new-chat sheet keeps the app's backdrop and gives the picker clear, familiar rows. */
 #sheet.sheet.on:has(.chat-compose-panel) {
-  background:rgba(8,10,14,.58);
+  background:rgba(8,10,14,.58)!important;
   -webkit-backdrop-filter:none;
   backdrop-filter:none;
 }
