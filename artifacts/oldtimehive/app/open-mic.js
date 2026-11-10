@@ -91,23 +91,25 @@ function renderRoom(state){
   const room=state.roomInfo||{},people=state.participants||[],me=api.me(),myId=api.cloudAccountId(),activeIds=state.activeSpeakers||new Set();
   const local=people.find(person=>person.id===myId);
   state.localMutedByHost=!!local?.hostMuted;
+  if(state.localMutedByHost)state.micOn=false;
   const host=state.role==="host";
   const activePeople=people.filter(person=>activeIds.has(person.id));
   const listeners=people.filter(person=>!activeIds.has(person.id));
   state.view="room";
   state.root.querySelector("#om-content").innerHTML=`
     <section class="om-live-room">
-      <div class="om-live-heading"><button class="om-back" type="button" data-om-action="back">← Rooms</button><span class="om-live-pill"><i></i> LIVE NOW</span><button class="om-icon-action" type="button" data-om-action="share" aria-label="Share room">${shareIcon}</button></div>
+      <div class="om-live-heading"><span class="om-back-label">LIVE ROOM</span><span class="om-live-pill"><i></i> LIVE NOW</span><button class="om-icon-action" type="button" data-om-action="share" aria-label="Share room">${shareIcon}</button></div>
       <div class="om-room-title"><span class="om-eyebrow">${host?"YOUR ROOM":"YOU'RE IN THE ROOM"}</span><h1>${esc(room.title||"Open Mic")}</h1><p>${esc(room.topic||"Open conversation")}</p></div>
       <div class="om-stage"><div class="om-stage-top"><span>ON THE MIC</span><span>${activePeople.length} speaking</span></div>
         <div class="om-stage-people">${(activePeople.length?activePeople:people.filter(person=>person.role==="host")).slice(0,8).map(person=>`<div class="om-stage-person ${activeIds.has(person.id)?"is-speaking":""}">${avatar(person)}<b>${esc(person.name)}</b><small>${person.role==="host"?"HOST":activeIds.has(person.id)?"SPEAKING":"ON STAGE"}</small></div>`).join("")||'<p class="om-stage-empty">Your voice can start the conversation.</p>'}</div>
       </div>
       <div class="om-audience-head"><div><span class="om-eyebrow">IN THE ROOM</span><h2>${people.length} people here</h2></div><span class="om-audience-note">Everyone can speak</span></div>
       <div class="om-people-list">${people.map(person=>`<div class="om-person-row"><span class="om-person-avatar ${activeIds.has(person.id)?"is-speaking":""}">${avatar(person)}</span><span class="om-person-copy"><b>${esc(person.name)}</b><small>${person.role==="host"?"HOST":activeIds.has(person.id)?"ON MIC":"LISTENING"}</small></span>${person.id===me?.id?'<span class="om-you-tag">YOU</span>':host&&person.role!=="host"?`<div class="om-person-actions"><button type="button" data-om-action="${person.hostMuted?"allow-mic":"mute"}" data-user-id="${esc(person.id)}">${person.hostMuted?"Allow mic":"Mute"}</button><button type="button" data-om-action="remove" data-user-id="${esc(person.id)}" aria-label="Remove ${esc(person.name)}">×</button></div>`:""}</div>`).join("")}</div>
+      <p class="om-form-error" id="om-room-error" role="alert"></p>
       <footer class="om-control-dock">
         <div class="om-mic-status"><span class="om-status-dot ${state.micOn?"is-on":""}"></span><span>${local?.hostMuted?"The host muted your mic":state.micOn?"Your mic is live":"You're listening"}</span></div>
         <div class="om-controls">${button(state.micOn?"Mute":"Unmute","mic",micIcon,`om-mic-button ${state.micOn?"is-on":""}`)}
-          ${button("Audio output","audio",speakerIcon,"om-secondary-button")}
+          ${button("Enable audio","audio",speakerIcon,"om-secondary-button")}
           ${button(host?"End room":"Leave room",host?"end":"leave",closeIcon,"om-leave-button")}</div>
       </footer>
     </section>`;
@@ -172,19 +174,21 @@ async function join(state,id){
     state.view="connecting";
     state.root.querySelector("#om-content").innerHTML='<div class="om-loading"><span class="om-pulse"></span><b>Joining the room</b><small>Preparing your audio…</small></div>';
     await connect(state,payload);
-  }catch(error){state.busy=false;renderLobby(state,error.message||"Could not join this room.");}
+  }catch(error){state.busy=false;await state.room?.disconnect().catch(()=>{});state.room=null;try{await requestCloudApi(`${roomPath(id)}/leave`,{method:"POST",body:{}});}catch{}state.roomInfo=null;renderLobby(state,error.message||"Could not join this room.");}
 }
 async function create(state,form){
   if(state.busy)return;state.busy=true;
-  const data=Object.fromEntries(new FormData(form).entries());
+  const data=Object.fromEntries(new FormData(form).entries());let payload=null;
   try{
-    const payload=await requestCloudApi("/api/open-mic/rooms",{method:"POST",body:data});
+    payload=await requestCloudApi("/api/open-mic/rooms",{method:"POST",body:data});
     if(active!==state)return;
     state.view="connecting";
     state.root.querySelector("#om-content").innerHTML='<div class="om-loading"><span class="om-pulse"></span><b>Opening your room</b><small>Getting the stage ready…</small></div>';
     await connect(state,payload);
   }catch(error){
-    state.busy=false;
+    state.busy=false;await state.room?.disconnect().catch(()=>{});state.room=null;
+    if(payload?.room?.id)try{await requestCloudApi(roomPath(payload.room.id),{method:"DELETE"});}catch{}
+    state.roomInfo=null;
     const target=state.root.querySelector("#om-form-error");
     if(target)target.textContent=error.message||"The room could not be created.";
     else renderLobby(state,error.message||"The room could not be created.");
@@ -192,7 +196,7 @@ async function create(state,form){
 }
 async function moderate(state,targetUserId,action){
   try{await requestCloudApi(`${roomPath(state.roomInfo.id)}/moderate`,{method:"POST",body:{targetUserId,action}});await refreshDetails(state);}
-  catch(error){renderRoom(state);state.root.querySelector(".om-form-error")?.replaceChildren(document.createTextNode(error.message||"Moderation failed."));}
+  catch(error){renderRoom(state);const notice=state.root.querySelector("#om-room-error");if(notice)notice.textContent=error.message||"Moderation failed."; }
 }
 async function leave(state,end=false){
   if(state.leaving)return;state.leaving=true;disposeTimers(state);
