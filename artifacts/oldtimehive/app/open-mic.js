@@ -1,5 +1,6 @@
 import { api, requestCloudApi } from "./store.js";
 import { iceServers } from "./comms/config.js";
+import { currentCall } from "./comms/calls.js";
 import { publishOpenMic, subscribeOpenMic, setCallTransportActive, waitForCallSignaling } from "./comms/signaling.js";
 
 let active=null;
@@ -336,6 +337,7 @@ function bind(state){
   });
 }
 export function openMic({roomId=""}={}){
+  if(currentCall()&&currentCall().phase!=="ended")throw new Error("Finish your one-to-one call before joining an Open Mic room.");
   roomId=roomId||new URL(location.href).searchParams.get("openMic")||"";
   if(active){active.root.focus?.();return active;}
   const root=createOverlay(),state={root,roomInfo:null,participants:[],peers:new Map(),view:"lobby",busy:false,leaving:false,micOn:false,
