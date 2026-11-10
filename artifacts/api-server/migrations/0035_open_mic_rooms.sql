@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS open_mic_participants (
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   role TEXT NOT NULL DEFAULT 'listener' CHECK (role IN ('host','listener')),
   host_muted INTEGER NOT NULL DEFAULT 0 CHECK (host_muted IN (0,1)),
+  mic_on INTEGER NOT NULL DEFAULT 0 CHECK (mic_on IN (0,1)),
   joined_at INTEGER NOT NULL,
   last_seen_at INTEGER NOT NULL,
   PRIMARY KEY (room_id, user_id)
