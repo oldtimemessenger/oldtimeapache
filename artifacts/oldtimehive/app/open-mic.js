@@ -103,7 +103,7 @@ function sendSignal(state,to,kind,payload){
 }
 function attachPeer(state,person,initiator){
   if(active!==state||person.id===api.cloudAccountId()||state.peers.has(person.id))return state.peers.get(person.id);
-  const pc=new RTCPeerConnection(iceServers({allowTurnFallback:true}));
+  const pc=new RTCPeerConnection(iceServers());
   const transceiver=pc.addTransceiver("audio",{direction:"sendrecv"});
   const peer={id:person.id,pc,sender:transceiver.sender,pendingIce:[],audio:null,initiator};
   state.peers.set(person.id,peer);
@@ -216,17 +216,24 @@ async function join(state,id){
     const payload=await requestCloudApi(`${roomPath(id)}/join`,{method:"POST",body:{}});
     if(active!==state)return;
     await enterRoom(state,payload);
-  }catch(error){state.busy=false;try{await requestCloudApi(`${roomPath(id)}/leave`,{method:"POST",body:{}});}catch{}await loadLobby(state,error.message||"Could not join this room.");}
+  }catch(error){
+    state.busy=false;disposeTimers(state);closePeers(state);state.unsubscribe?.();state.unsubscribe=null;setCallTransportActive(false);
+    try{await requestCloudApi(`${roomPath(id)}/leave`,{method:"POST",body:{}});}catch{}
+    state.roomInfo=null;state.participants=[];await loadLobby(state,error.message||"Could not join this room.");
+  }
 }
 async function create(state,form){
   if(state.busy)return;state.busy=true;
-  const data=Object.fromEntries(new FormData(form).entries());
+  const data=Object.fromEntries(new FormData(form).entries());let payload=null;
   try{
-    const payload=await requestCloudApi("/api/open-mic/rooms",{method:"POST",body:data});
+    payload=await requestCloudApi("/api/open-mic/rooms",{method:"POST",body:data});
     if(active!==state)return;
     await enterRoom(state,payload);
   }catch(error){
-    state.busy=false;const target=state.root.querySelector("#om-form-error");
+    state.busy=false;disposeTimers(state);closePeers(state);state.unsubscribe?.();state.unsubscribe=null;setCallTransportActive(false);
+    if(payload?.room?.id)try{await requestCloudApi(roomPath(payload.room.id),{method:"DELETE"});}catch{}
+    state.roomInfo=null;state.participants=[];
+    const target=state.root.querySelector("#om-form-error");
     if(target)target.textContent=error.message||"The room could not be created.";
     else await loadLobby(state,error.message||"The room could not be created.");
   }
