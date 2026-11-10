@@ -308,3 +308,253 @@
   #app .phone .settings-screen { max-width:920px;margin-inline:auto; }
   #app .phone .community-post-card { padding-inline:20px; }
 }
+
+
+/* Reference-led visual direction: obsidian / editorial / immersive.
+   This layer intentionally replaces the former light palette while preserving
+   all existing markup, icons, components, routes, and interaction behavior. */
+:root {
+  color-scheme:dark;
+  --color-primary:#e9edf5;
+  --color-primary-pressed:#cbd2df;
+  --color-dark:#050609;
+  --color-surface:#090a0e;
+  --color-surface-secondary:#171920;
+  --color-ink:#f5f6fa;
+  --color-muted:#969ba8;
+  --color-border:#292c35;
+  --bg:#050609;
+  --panel:#11131a;
+  --card:#0c0e13;
+  --line:#292c35;
+  --text:#f5f6fa;
+  --muted:#969ba8;
+  --accent:#f5f6fa;
+  --ot-color-text:#f5f6fa;
+  --ot-color-border:#292c35;
+  --ot-color-surface:#090a0e;
+  --ot-color-brand:#f5f6fa;
+}
+html,body,#app { background:#050609;color:#f5f6fa; }
+#app .phone {
+  background:#050609!important;
+  color:#f5f6fa;
+  --color-surface:#090a0e;
+  --color-surface-secondary:#171920;
+  --color-ink:#f5f6fa;
+  --color-muted:#969ba8;
+  --color-border:#292c35;
+  --bg:#050609;
+  --panel:#11131a;
+  --card:#0c0e13;
+  --line:#292c35;
+  --text:#f5f6fa;
+  --muted:#969ba8;
+  --editorial-hairline:rgba(255,255,255,.11);
+}
+#app .phone :is(.screen,.page,.settings-content,.community-screen,.search-screen,.profile-screen,
+  .profile-page,.profile-body,.profile-simple-hero,.profile-intro,.profile-hero,
+  .settings-screen,.notifications-screen,.chat-list-screen,.conversation-screen) {
+  background-color:#050609!important;
+  color:#f5f6fa;
+}
+#app .phone :is(.topbar,.community-header,.chat-header,.settings-header,.search-app-header,
+  .profile-editor-header,.profile-topbar,.profile-simple-hero .profile-topbar) {
+  background:#050609!important;
+  color:#f5f6fa!important;
+  border-color:rgba(255,255,255,.1)!important;
+}
+#app .phone :is(h1,h2,h3,h4,.title,.section-title,.community-section-title,
+  .search-section-title,.profile-name,.profile-topbar-handle,.profile-details-copy .profile-name) {
+  color:#f5f6fa;
+}
+#app .phone :is(p,small,.sub,.cap,.profile-handle,.profile-category,.profile-count-text small,
+  .community-post-meta,.post-meta,.clip-meta,.search-result-meta,.notification-meta) {
+  color:#a4a9b5;
+}
+#app .phone :is(.card,.panel,.settings-group,.settings-entry,.community-post-card,
+  .notification-row,.chat-row,.search-result,.sheet,.post-actions-menu-items,
+  .profile-post-menu-items,.post-edit-menu-items) {
+  background:#0c0e13!important;
+  color:#f5f6fa;
+  border-color:rgba(255,255,255,.1)!important;
+  box-shadow:none;
+}
+#app .phone :is(.field,.search,.chatsearch,.discovery-search,.xe-search,
+  .discovery-search input,.chatsearch input) {
+  background:#171920!important;
+  color:#f5f6fa!important;
+  border:1px solid rgba(255,255,255,.09)!important;
+}
+#app .phone :is(input,textarea,select) {
+  color:#f5f6fa;
+  caret-color:#fff;
+}
+#app .phone :is(input,textarea,select)::placeholder { color:#858b99;opacity:1; }
+#app .phone :is(button,a,[role="button"]) { -webkit-tap-highlight-color:transparent; }
+#app .phone :is(button,.btn):focus-visible,
+#app .phone :is(input,textarea,select):focus-visible {
+  outline-color:rgba(255,255,255,.8);
+}
+#app .phone :is(.nav,.nav.lightnav) {
+  background:rgba(7,8,12,.97)!important;
+  color:#f5f6fa!important;
+  border-top:1px solid rgba(255,255,255,.12)!important;
+  box-shadow:0 -8px 28px rgba(0,0,0,.24)!important;
+  -webkit-backdrop-filter:blur(18px);
+  backdrop-filter:blur(18px);
+}
+#app .phone .nav:not(.nav-hidden) > button { color:#858b99; }
+#app .phone .nav:not(.nav-hidden) > button.on { color:#fff;background:transparent; }
+#app .phone .nav:not(.nav-hidden) > button.on::after { background:#fff; }
+#app .phone :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items,
+  .cf-menu,.sheet,.panel) {
+  background:#11131a!important;
+  color:#f5f6fa;
+  border-color:rgba(255,255,255,.12)!important;
+  box-shadow:0 18px 50px rgba(0,0,0,.55);
+}
+#app .phone :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items) button {
+  color:#f5f6fa;
+}
+#app .phone :is(.post-actions-menu-items,.profile-post-menu-items,.post-edit-menu-items) button:hover {
+  background:#20232c;
+}
+/* Profile reference: centered identity, three social metrics, compact action strip. */
+#app .phone .profile-screen .profile-simple-hero,
+#app .phone .profile-screen .profile-simple-hero .profile-topbar,
+#app .phone .profile-screen .profile-simple-hero .profile-intro {
+  background:#050609!important;color:#f5f6fa!important;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-topbar > button,
+#app .phone .profile-screen .profile-simple-hero .profile-topbar-actions > button {
+  color:#f5f6fa!important;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-intro {
+  display:flex;flex-direction:column;align-items:center;
+  padding:14px 16px 16px;text-align:center;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-overview-row {
+  display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-avatar-wrap {
+  width:clamp(108px,31vw,142px);height:clamp(108px,31vw,142px);
+  flex-basis:auto;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-avatar {
+  border:2px solid rgba(255,255,255,.7);
+  box-shadow:0 0 0 1px rgba(255,255,255,.18);
+}
+#app .phone .profile-screen .profile-simple-hero .profile-story-ring {
+  border-color:#f5f6fa;background:#050609;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-details-copy {
+  width:100%;overflow:visible;text-align:center;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-details-copy .profile-name {
+  color:#f5f6fa;font-size:20px;letter-spacing:-.035em;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-details-copy :is(.profile-handle,.profile-category) {
+  color:#a4a9b5;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-stats {
+  width:100%;max-width:520px;margin:14px auto 0;gap:0;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-stats > .profile-count-card {
+  min-height:54px;background:transparent!important;color:#f5f6fa!important;
+  border-right:1px solid rgba(255,255,255,.1)!important;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-stats > .profile-count-card:last-child { border-right:0!important; }
+#app .phone .profile-screen .profile-simple-hero .profile-count-text {
+  flex-direction:column;align-items:center;gap:3px;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-count-text b {
+  color:#f5f6fa;font-size:20px;font-weight:780;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-count-text small { color:#a4a9b5;font-size:12px; }
+#app .phone .profile-screen .profile-simple-hero .profile-meta-row {
+  justify-content:center;color:#d2d5dd;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-primary-actions {
+  width:100%;display:grid;grid-template-columns:minmax(0,1fr) 48px 48px;
+  gap:8px;margin-top:16px;
+}
+#app .phone .profile-screen .profile-simple-hero .profile-primary-actions > button {
+  min-height:44px;border-radius:11px;
+  background:#171920!important;border:1px solid rgba(255,255,255,.08)!important;
+  color:#f5f6fa!important;
+}
+#app .phone .profile-screen .profile-body { background:#050609!important; }
+#app .phone .profile-screen .profile-section-tabs {
+  background:#050609!important;border-bottom:1px solid rgba(255,255,255,.12)!important;
+}
+#app .phone .profile-screen .profile-section-tab { color:#9298a5; }
+#app .phone .profile-screen .profile-section-tab.on { color:#fff;border-color:#fff; }
+#app .phone .profile-screen .profile-post-grid { gap:3px; }
+#app .phone .profile-screen .profile-post-media { border-radius:2px;background:#11131a; }
+/* Story: photo/video stays full bleed; creator chrome and reply field remain legible. */
+#storyview.storyview { background:#050609!important;color:#fff; }
+#storyview.storyview .story-stage { background:#050609!important; }
+#storyview.storyview .story-creator {
+  background:rgba(5,6,9,.3);border-color:rgba(255,255,255,.15);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+}
+#storyview.storyview .story-compose {
+  background:rgba(5,6,9,.48);border-color:rgba(255,255,255,.35);
+}
+#storyview.storyview .story-send { background:#fff;color:#050609;box-shadow:none; }
+#storyview.storyview .story-more-menu { background:#11131a;color:#fff; }
+/* The Ask Me Anything prompt remains a bright, readable sticker over the media. */
+#storyview.storyview :is(.story-question-card,.story-ask-card,.story-question-sticker,
+  [data-story-sticker="question"],[data-story-sticker="ask"]) {
+  background:#fff!important;color:#17191c!important;border-radius:20px;
+  box-shadow:0 12px 38px rgba(0,0,0,.2);
+}
+#storyview.storyview :is(.story-question-card,.story-ask-card,.story-question-sticker,
+  [data-story-sticker="question"],[data-story-sticker="ask"]) :is(h1,h2,h3,p,span,input,textarea) {
+  color:#17191c!important;
+}
+/* Editorial news surfaces: high-contrast headlines and image-first lead stories. */
+#app .phone :is(.news-screen,.news-page,.news-feed,.news-home) {
+  background:#050609!important;color:#f5f6fa;
+}
+#app .phone :is(.news-screen,.news-page,.news-feed,.news-home) :is(.news-header,.news-category-tabs) {
+  background:#050609!important;border-color:rgba(255,255,255,.1);
+}
+#app .phone :is(.news-screen,.news-page,.news-feed,.news-home) :is(.news-lead-card,.news-story-card,.news-row) {
+  background:transparent!important;border-bottom:1px solid rgba(255,255,255,.12);
+  box-shadow:none;border-radius:0;
+}
+#app .phone :is(.news-screen,.news-page,.news-feed,.news-home) :is(.news-headline,.news-story-title) {
+  color:#f5f6fa;font-weight:700;letter-spacing:-.025em;
+}
+#app .phone :is(.news-screen,.news-page,.news-feed,.news-home) :is(.news-source,.news-time,.news-views) { color:#969ba8; }
+/* Camera and publishing: preserve the preview canvas, organize controls around it. */
+#app .phone :is(.camera-screen,.creative-editor,.sc-root) {
+  background:#050609!important;color:#fff;
+}
+#app .phone .creative-editor :is(.ce-dock,.ce-more,.ce-menu-pop,.ce-panel) {
+  background:#11131a!important;color:#fff;border-color:rgba(255,255,255,.12)!important;
+}
+#app .phone .creative-editor :is(.ce-tool,.ce-dock button,.ce-menu-pop button) { color:#f5f6fa; }
+#app .phone .creative-editor :is(.ce-tool[aria-pressed="true"],.ce-tool.on) {
+  background:#292d38;color:#fff;
+}
+#app .phone .creative-editor .ce-text-done {
+  background:#fff!important;color:#050609!important;border:0!important;
+}
+#app .phone .sc-root { background:#050609;color:#fff; }
+#app .phone .sc-send {
+  background:linear-gradient(to top,rgba(5,6,9,.96),rgba(5,6,9,.72),transparent);
+}
+#app .phone .sc-aud[aria-checked="true"] {
+  background:#fff;color:#050609;border-color:#fff;
+}
+#app .phone .sc-sendbtn { background:#fff;color:#050609; }
+#app .phone .sc-sendbtn:not(:disabled):active { background:#dfe3eb;color:#050609; }
+@media (max-width:380px) {
+  #app .phone .profile-screen .profile-simple-hero .profile-intro { padding-inline:12px; }
+  #app .phone .profile-screen .profile-simple-hero .profile-avatar-wrap {
+    width:104px;height:104px;flex-basis:auto;
+  }
+}
