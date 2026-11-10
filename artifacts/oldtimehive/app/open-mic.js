@@ -188,11 +188,13 @@ async function refreshDetails(state){
     const details=await requestCloudApi(roomPath(state.roomInfo.id));
     if(active!==state)return;
     state.roomInfo=details.room;state.participants=details.participants||[];
+    const local=state.participants.find(person=>person.id===api.cloudAccountId());
+    if(local?.hostMuted){state.localMutedByHost=true;state.micOn=false;state.localStream?.getAudioTracks().forEach(track=>track.enabled=false);await Promise.all([...state.peers.values()].map(peer=>peer.sender.replaceTrack(null).catch(()=>{})));}
     if(state.view==="room"){syncPeers(state);renderRoom(state);}
   }catch(error){
     if(active!==state)return;
-    if(error.message?.includes("ended")||error.message?.includes("unavailable")){
-      await leave(state,false,true,"This room has ended.");
+    if(error.message?.includes("ended")||error.message?.includes("unavailable")||error.message?.includes("removed")){
+      await leave(state,false,true,error.message?.includes("removed")?"The host removed you from this room.":"This room has ended.");
     }
   }
 }
@@ -214,7 +216,7 @@ async function join(state,id){
     const payload=await requestCloudApi(`${roomPath(id)}/join`,{method:"POST",body:{}});
     if(active!==state)return;
     await enterRoom(state,payload);
-  }catch(error){state.busy=false;await loadLobby(state,error.message||"Could not join this room.");}
+  }catch(error){state.busy=false;try{await requestCloudApi(`${roomPath(id)}/leave`,{method:"POST",body:{}});}catch{}await loadLobby(state,error.message||"Could not join this room.");}
 }
 async function create(state,form){
   if(state.busy)return;state.busy=true;
